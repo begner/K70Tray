@@ -135,6 +135,7 @@ There are 3 types of colorgroups:
 - onPress: Which is the color of the key, while it is pressed (cycling)
 - onRelease: A one-cycle animation, when key is released.
 
+Example:
 
     <all>
         <!-- Default state is red -->
@@ -186,12 +187,12 @@ You could define an animation for a single key as well.
 Use a Key tag instead of all:
 
 
-        <-- only for the H-Key -->
-        <key keyname="H">
-            <colorGroup type="default">
-                <color r="7" g="0" b="0">
-            </colorGroup>
-        </all>
+    <-- only for the H-Key -->
+    <key keyname="H">
+        <colorGroup type="default">
+            <color r="7" g="0" b="0">
+        </colorGroup>
+    </all>
 
 
 Or you can use a KeyGroup (look at Theme.Rainbow.xml)

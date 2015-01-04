@@ -5,10 +5,14 @@ Alternative Controll App for Corsair K70RGB
 
 Base on Ideas of:
 https://github.com/PawYT/K70-RGB-Mod
-ttp://www.reddit.com/user/chrisgzy
+http://www.reddit.com/user/chrisgzy
 http://www.reddit.com/user/fly-hard
 
-The Sources should compile on Microsoft Visual Studio Comunity Editon 2013 (which is free).
+The sources should compile on Microsoft Visual Studio Comunity Editon 2013 (which is free).
+
+If you just want to use it - just download the files in the "compiled" dir. ( https://github.com/begner/K70Tray/tree/master/compiled ).
+
+
 
 
 What it is
@@ -34,8 +38,6 @@ The Keyboardlayouts in this world are different. So - the K70Tray reads XML File
 Basicly its a Map: which key has which scancode, where is it on the Keyboard how big is ist and which led adress belongs to it.
 
 I'll be glad if you send me other XML-Layouts, so i'll commit them.
-
-::
 
     <Layout>
         <Row>
@@ -86,7 +88,6 @@ Each Theme NEEDS to have one Map which is called "default".
 
 So here's one default map, which lights all keys up in red.
 
-::
 
     <Map name="default">
 
@@ -101,12 +102,12 @@ So here's one default map, which lights all keys up in red.
             </colorGroup>
         </all>
 
-    </Map
+    </Map>
+
 
 If you want to create a Key-Respond map do the following:
 This Map will lights everything blue, while shift is pressed.
 
-::
 
     <Map name="Shift">
         <activateOnKey>
@@ -134,7 +135,7 @@ There are 3 types of colorgroups:
 - onPress: Which is the color of the key, while it is pressed (cycling)
 - onRelease: A one-cycle animation, when key is released.
 
-::
+
 
     <all>
         <!-- Default state is red -->
@@ -158,13 +159,14 @@ There are 3 types of colorgroups:
         </colorGroup>
     </all>
 
+
 Animations
 ----------
 
 You could place as much as color tags inside a colorgroup as you want:
 
 This example fades from blue to black.
-::
+
 
     <colorGroup>
         <color r="0" g="0" b="7" />
@@ -184,13 +186,14 @@ All, Key, Keygroups
 You could define an animation for a single key as well.
 Use a Key tag instead of all:
 
-::
+
         <-- only for the H-Key -->
         <key keyname="H">
             <colorGroup type="default">
                 <color r="7" g="0" b="0">
             </colorGroup>
         </all>
+
 
 Or you can use a KeyGroup (look at Theme.Rainbow.xml)
 

@@ -124,7 +124,7 @@ This Map will lights everything blue, while shift is pressed.
                <color r="0" g="0" b="7">
            </colorGroup>
         </all>
-   </Map>
+    </Map>
 
 
 colorGroup
@@ -134,7 +134,6 @@ There are 3 types of colorgroups:
 - default: Which is the default state. (cycling)
 - onPress: Which is the color of the key, while it is pressed (cycling)
 - onRelease: A one-cycle animation, when key is released.
-
 
 
     <all>

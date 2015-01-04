@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Theme>
+
+  <sharedAnimations>
+    <animation name="redblink">
+      <color r="7" g="7" b="7" duration="5" />
+      <color r="7" g="0" b="0" duration="20" />
+      <color r="4" g="0" b="0" duration="20" />
+      <color r="7" g="0" b="0" duration="20" />
+    </animation>
+    <animation name="blueblink">
+      <color r="7" g="7" b="7" duration="5" />
+      <color r="0" g="0" b="7" duration="20" />
+      <color r="0" g="0" b="4" duration="20" />
+      <color r="0" g="0" b="7" duration="20" />
+    </animation>
+    <animation name="yellowblink">
+      <color r="7" g="7" b="0" duration="20" />
+      <color r="0" g="0" b="7" duration="20" />
+    </animation>
+  </sharedAnimations>
+
+
+  <Map name="default">
+    <!-- needs empty group to set on default! -->
+    <activateOnKey>
+      <group />
+    </activateOnKey>
+
+    <all>
+      <!-- syncName="default/default" syncTo="default/default" -->
+      <colorGroup type="default">
+          <animation name="redblink"/>
+      </colorGroup>
+    </all>
+
+  </Map>
+
+  <Map name="Shift">
+    <activateOnKey>
+      <group>
+        <key keyname="LShift" />
+      </group>
+      <group>
+        <key keyname="RShift" />
+      </group>
+    </activateOnKey>
+    
+    <all>
+      <colorGroup type="default" syncTo="default/default">
+        <animation name="blueblink" />
+      </colorGroup>
+      <colorGroup type="onPress" syncTo="default/default">
+        <animation name="blueblink" />
+      </colorGroup>
+    </all>
+   </Map>
+
+    
+</Theme>

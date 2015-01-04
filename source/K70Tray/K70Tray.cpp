@@ -7,6 +7,7 @@
 #include "MainCorsairRGBK.h"
 #include "KeyBoardDevice.h"
 #include "RGB.h"
+#include "ProcessList.h"
 #include <stdarg.h>  
 #include <string>
 #include <iostream>
@@ -17,6 +18,8 @@
 
 #define PACKVERSION(major,minor) MAKELONG(minor,major)
 #define MAX_LOADSTRING 100
+
+
 
 
 // Global Variables:
@@ -33,6 +36,7 @@ LRESULT CALLBACK	LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 void				AppStart();
 INT_PTR CALLBACK	Main(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK	ErrorStartup(HWND, UINT, WPARAM, LPARAM);
 void DebugMsg(string msg, ...);
 vector<string> themeItems;
 vector<string> layoutItems;
@@ -140,7 +144,7 @@ void DebugMsg(string msg, ...) {
 	SendMessage(hwndOutput, EM_GETSEL, reinterpret_cast<WPARAM>(&StartPos), reinterpret_cast<WPARAM>(&EndPos));
 
 	// move the caret to the end of the text
-	int outLength = GetWindowTextLength(hwndOutput);
+	DWORD outLength = GetWindowTextLength(hwndOutput);
 	SendMessage(hwndOutput, EM_SETSEL, outLength, outLength);
 
 	// insert the text at the new caret position
@@ -291,6 +295,22 @@ DWORD GetDLLVersion(LPCTSTR lpszDllName)
 // After All initialisation was made - start the app right now :D
 //
 BOOL StartInstance() {
+
+	ProcessList testProcess;
+
+	// detect active corsair CUE
+	if (testProcess.FindRunningProcess("CorsairHID.exe")) {
+		DialogBox(ghInst, MAKEINTRESOURCE(IDD_CUERUNNING), ghWnd, ErrorStartup);
+		return false;
+	};
+
+	// detects itself... :(
+	/*
+	if (testProcess.FindRunningProcess("K70Tray.exe")) {
+		DialogBox(ghInst, MAKEINTRESOURCE(IDD_K70RUNNING), ghWnd, ErrorStartup);
+		return false;
+	};
+	*/
 
 	DebugMsg("App started...");
 
@@ -537,6 +557,29 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 //
+// Message handler for about box.
+// 
+INT_PTR CALLBACK ErrorStartup(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			PostQuitMessage(0);
+			return (INT_PTR)TRUE;
+		}
+		break;
+	}
+	return (INT_PTR)FALSE;
+}
+
+//
 // Message handler for MainDLG Window
 //
 INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -548,6 +591,7 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		SendMessage(GetDlgItem(ghDlgMain, IDC_APPMESSAGES), EM_SETLIMITTEXT, (WPARAM)0, (LPARAM)0);
 		return (INT_PTR)TRUE;
 		break;
 	case WM_PAINT:
@@ -583,11 +627,23 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 				mainCorsairRGBK->ChangeTheme(layoutItems[savingLayoutIndex]);
 			}
 		}
-		// Demo Button
+		// About
 		else if (LOWORD(wParam) == IDC_BUTTONABOUT){
 			DialogBox(ghInst, MAKEINTRESOURCE(IDD_ABOUTBOX), ghWnd, About);
 			UpdateWindow(hDlg);
 		} 
+		// Clear Console
+		else if (LOWORD(wParam) == IDC_CLEARCONSOLE){
+			HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_APPMESSAGES);
+			SendMessage(hwndOutput, WM_SETTEXT, (WPARAM)0, LPARAM(L""));
+			UpdateWindow(hDlg);
+		}
+		// Theme Reload
+		else if (LOWORD(wParam) == IDC_THEMERELOAD){
+			HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_THEMESELECT);
+			int selectedThemeIndex = SendMessage(hwndOutput, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+			mainCorsairRGBK->ChangeTheme(themeItems[selectedThemeIndex]);
+	}
 		// Exit of Window (means hide)
 		else if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{

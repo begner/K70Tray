@@ -413,5 +413,29 @@
     </KeyGroup>
   </Map>
 
+  <Map name="Ctrl">
+    <activateOnKey>
+      <group>
+        <key keyname="LCtrl" />
+      </group>
+      <group>
+        <key keyname="RCtrl" />
+      </group>
+    </activateOnKey>
+
+    <all>
+      <colorGroup type="default" syncName="Ctrl/pulseRed" syncTo="Ctrl/pulseRed">
+        <animation name="pulseRed" />
+      </colorGroup>
+      <colorGroup type="onPress" >
+        <color r="7" g="7" b="7" duration="10"/>
+      </colorGroup>
+      <colorGroup type="onRelease" join="overwrite">
+        <animation name="releaseAnimationBlue"/>
+      </colorGroup>
+    </all>
+    
+  </Map>
+
 </Theme>
 

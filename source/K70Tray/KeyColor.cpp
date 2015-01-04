@@ -5,7 +5,14 @@
 
 KeyColor::KeyColor()
 {
-//	printf("Constructor KeyColor");
+
+}
+
+KeyColor::~KeyColor()
+{
+	defaultColor.clear();
+	onPressColor.clear();
+	onReleaseColor.clear();
 }
 
 void KeyColor::clear(string type) {

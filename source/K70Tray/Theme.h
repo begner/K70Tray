@@ -34,6 +34,7 @@ private:
 public:
 
 	Theme();
+	~Theme();
 	void KeyDown(unsigned int keycode);
 	void KeyUp(unsigned int keycode);
 	Keyboard * getKeyboard();

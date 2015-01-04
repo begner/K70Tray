@@ -13,34 +13,14 @@
         <color r="7" g="0" b="0" />
       </colorGroup>
       <colorGroup type="onPress">
-        <color r="7" g="0" b="0" />
+        <color r="0" g="0" b="7" />
       </colorGroup>
       <colorGroup type="onRelease">
-        <color r="7" g="0" b="0" />
+        <color r="0" g="7" b="0" duration="10" />
       </colorGroup>
     </all>
 
-    <key keyname="F">
-      <colorGroup type="default">
-        <color r="7" g="0" b="0" />
-      </colorGroup>
-      <colorGroup type="onPress">
-        <color r="0" g="7" b="0" />
-      </colorGroup>
-      <colorGroup type="onRelease">
-        <color r="0" g="0" b="7" />
-        <color r="0" g="0" b="6" />
-        <color r="0" g="0" b="5" />
-        <color r="0" g="0" b="4" />
-        <color r="0" g="0" b="3" />
-        <color r="0" g="0" b="2" />
-        <color r="0" g="0" b="1" />
-        <color r="0" g="0" b="0" />
-      </colorGroup>
-    </key>
-
-
-
+    
   </Map>
 
 

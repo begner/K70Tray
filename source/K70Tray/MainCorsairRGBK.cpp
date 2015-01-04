@@ -248,6 +248,10 @@ void MainCorsairRGBK::ChangeTheme(string themeName) {
 	currentTheme->StopTheme();
 	ResetKeyboard();
 	SendLEDState();
+	
+	delete currentTheme;
+	currentTheme = new Theme();
+
 	animateKeyBoard = false;
 	DebugMsg("Change Theme to '%s'", themeName.c_str());
 	SetCurrentTheme(themeName);

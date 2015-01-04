@@ -93,6 +93,7 @@
     <ClInclude Include="KeyColor.h" />
     <ClInclude Include="LightControl.h" />
     <ClInclude Include="MainCorsairRGBK.h" />
+    <ClInclude Include="ProcessList.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RGB.h" />
     <ClInclude Include="stdafx.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="KeyColor.cpp" />
     <ClCompile Include="LightControl.cpp" />
     <ClCompile Include="MainCorsairRGBK.cpp" />
+    <ClCompile Include="ProcessList.cpp" />
     <ClCompile Include="RGB.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

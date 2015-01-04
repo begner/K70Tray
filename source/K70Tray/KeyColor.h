@@ -2,6 +2,7 @@
 #define KEYCOLOR_H
 
 #include "Constants.h"
+#include "Globals.h"
 // #include "OutputConsole.h"
 #include "RGB.h"
 #include <stdlib.h>
@@ -30,6 +31,7 @@ class KeyColor
 	string			onReleaseJoinMode = "overwrite";
 public: 
 	KeyColor();
+	~KeyColor();
 	void clear(string type);
 	void addColor(string type, RGB color, unsigned int duration);
 	void setKeyDown(bool state);

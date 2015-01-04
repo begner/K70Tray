@@ -10,6 +10,15 @@ Theme::Theme() {
 	activeMap = NULL;
 }
 
+Theme::~Theme() {
+	allMaps.clear();
+	keySwitchGroups.clear();
+	syncGroups.clear();
+	syncGroupTick.clear();
+}
+
+
+
 void Theme::KeyDown(unsigned int keycode) {
 	// printf("Theme: KeyDown %i\n", keycode);
 	

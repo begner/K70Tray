@@ -28,10 +28,8 @@ ThemeMap::ThemeMap(string mapname)
 */
 ThemeMap::ThemeMap()
 {
-	// printf("Create ThemeMap\n");
-	
-	
-	
+	DebugMsg("Clearing ThemeMap...");
+	keyColorMap.clear();
 }
 
 /*

@@ -3,39 +3,57 @@
 
   <sharedAnimations>
     <animation name="redblink">
-      <color r="7" g="7" b="7" duration="5" />
-      <color r="7" g="0" b="0" duration="20" />
-      <color r="4" g="0" b="0" duration="20" />
-      <color r="7" g="0" b="0" duration="20" />
+      <color r="7" g="0" b="0" duration="5" />
+      <color r="6" g="0" b="0" duration="5" />
+      <color r="5" g="0" b="0" duration="5" />
+      <color r="4" g="0" b="0" duration="5" />
+      <color r="5" g="0" b="0" duration="5" />
+      <color r="6" g="0" b="0" duration="5" />
     </animation>
     <animation name="blueblink">
-      <color r="7" g="7" b="7" duration="5" />
-      <color r="0" g="0" b="7" duration="20" />
-      <color r="0" g="0" b="4" duration="20" />
-      <color r="0" g="0" b="7" duration="20" />
+      <color r="0" g="0" b="7" duration="5" />
+      <color r="0" g="0" b="6" duration="5" />
+      <color r="0" g="0" b="5" duration="5" />
+      <color r="0" g="0" b="4" duration="5" />
+      <color r="0" g="0" b="5" duration="5" />
+      <color r="0" g="0" b="6" duration="5" />
     </animation>
     <animation name="yellowblink">
-      <color r="7" g="7" b="0" duration="20" />
-      <color r="0" g="0" b="7" duration="20" />
+      <color r="7" g="7" b="0" duration="5" />
+      <color r="6" g="6" b="0" duration="5" />
+      <color r="5" g="5" b="0" duration="5" />
+      <color r="4" g="4" b="0" duration="5" />
+      <color r="5" g="5" b="0" duration="5" />
+      <color r="6" g="6" b="0" duration="5" />
+    </animation>
+    <animation name="greenblink">
+      <color r="0" g="7" b="0" duration="5" />
+      <color r="0" g="6" b="0" duration="5" />
+      <color r="0" g="5" b="0" duration="5" />
+      <color r="0" g="4" b="0" duration="5" />
+      <color r="0" g="5" b="0" duration="5" />
+      <color r="0" g="6" b="0" duration="5" />
+    </animation>
+    <animation name="purpleblink">
+      <color r="7" g="0" b="7" duration="5" />
+      <color r="6" g="0" b="6" duration="5" />
+      <color r="5" g="0" b="5" duration="5" />
+      <color r="4" g="0" b="4" duration="5" />
+      <color r="5" g="0" b="5" duration="5" />
+      <color r="6" g="0" b="6" duration="5" />
     </animation>
   </sharedAnimations>
 
 
   <Map name="default">
-    <!-- needs empty group to set on default! -->
-    <activateOnKey>
-      <group />
-    </activateOnKey>
-
     <all>
-      <!-- syncName="default/default" syncTo="default/default" -->
-      <colorGroup type="default">
+      <colorGroup type="default" syncName="default/default" syncTo="default/default">
           <animation name="redblink"/>
       </colorGroup>
     </all>
-
   </Map>
 
+  
   <Map name="Shift">
     <activateOnKey>
       <group>
@@ -45,16 +63,69 @@
         <key keyname="RShift" />
       </group>
     </activateOnKey>
-    
     <all>
       <colorGroup type="default" syncTo="default/default">
         <animation name="blueblink" />
       </colorGroup>
-      <colorGroup type="onPress" syncTo="default/default">
-        <animation name="blueblink" />
-      </colorGroup>
     </all>
    </Map>
+  
+  <Map name="Ctrl">
+    <activateOnKey>
+      <group>
+        <key keyname="LCtrl" />
+      </group>
+      <group>
+        <key keyname="RCtrl" />
+      </group>
+    </activateOnKey>
+    <all>
+      <colorGroup type="default" syncTo="default/default">
+        <animation name="yellowblink" />
+      </colorGroup>
+    </all>
+  </Map>
 
-    
+  <Map name="Alt">
+    <activateOnKey>
+      <group>
+        <key keyname="LAlt" />
+      </group>
+      <group>
+        <key keyname="AltGr" />
+      </group>
+    </activateOnKey>
+    <all>
+      <colorGroup type="default" syncTo="default/default">
+        <animation name="greenblink" />
+      </colorGroup>
+    </all>
+  </Map>
+
+
+  <Map name="Ctrl + Alt">
+    <activateOnKey>
+      <group>
+        <key keyname="LAlt" />
+        <key keyname="LCtrl" />
+      </group>
+      <group>
+        <key keyname="AltGr" />
+        <key keyname="LCtrl" />
+      </group>
+      <group>
+        <key keyname="LAlt" />
+        <key keyname="RCtrl" />
+      </group>
+      <group>
+        <key keyname="AltGr" />
+        <key keyname="RCtrl" />
+      </group>
+    </activateOnKey>
+    <all>
+      <colorGroup type="default" syncTo="default/default">
+        <animation name="purpleblink" />
+      </colorGroup>
+    </all>
+  </Map>
 </Theme>

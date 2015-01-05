@@ -21,7 +21,7 @@ int LightControl::getLedAdressByKeyCode(unsigned char keycode) {
 }
 
 int LightControl::getXYByKeyCode(unsigned char keycode, string position) {
-	int ret;
+	int ret = 1;
 
 	for (int y = K70_COLS; y--> 0;) // Y 0 = CTRL, Windowskey, Alt, space...
 	{

@@ -1,417 +1,488 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Theme>
 
-    <!-- Rainbow Animation -->
-    <sharedAnimations>
-        <animation name="rainbowKey">
-            <color r="7" g="0" b="0" duration="3" />
-            <color r="7" g="0" b="1" duration="3" />
-            <color r="7" g="0" b="2" duration="3" />
-            <color r="7" g="0" b="3" duration="3" />
-            <color r="7" g="0" b="4" duration="3" />
-            <color r="7" g="0" b="5" duration="3" />
-            <color r="7" g="0" b="6" duration="3" />
-            <color r="7" g="0" b="7" duration="3" />
-            <color r="6" g="0" b="7" duration="3" />
-            <color r="5" g="0" b="7" duration="3" />
-            <color r="4" g="0" b="7" duration="3" />
-            <color r="3" g="0" b="7" duration="3" />
-            <color r="2" g="0" b="7" duration="3" />
-            <color r="1" g="0" b="7" duration="3" />
-            <color r="0" g="0" b="7" duration="3" />
-            <color r="0" g="1" b="7" duration="3" />
-            <color r="0" g="2" b="7" duration="3" />
-            <color r="0" g="3" b="7" duration="3" />
-            <color r="0" g="4" b="7" duration="3" />
-            <color r="0" g="5" b="7" duration="3" />
-            <color r="0" g="6" b="7" duration="3" />
-            <color r="0" g="7" b="7" duration="3" />
-            <color r="0" g="7" b="6" duration="3" />
-            <color r="0" g="7" b="5" duration="3" />
-            <color r="0" g="7" b="4" duration="3" />
-            <color r="0" g="7" b="3" duration="3" />
-            <color r="0" g="7" b="2" duration="3" />
-            <color r="0" g="7" b="1" duration="3" />
-            <color r="1" g="7" b="0" duration="3" />
-            <color r="2" g="7" b="0" duration="3" />
-            <color r="3" g="7" b="0" duration="3" />
-            <color r="4" g="7" b="0" duration="3" />
-            <color r="5" g="7" b="0" duration="3" />
-            <!--<color r="6" g="7" b="0" duration="3" />-->
-            <color r="7" g="7" b="0" duration="3" />
-            <color r="7" g="6" b="0" duration="3" />
-            <color r="7" g="5" b="0" duration="3" />
-            <color r="7" g="4" b="0" duration="3" />
-            <color r="7" g="3" b="0" duration="3" />
-            <color r="7" g="2" b="0" duration="3" />
-            <color r="7" g="1" b="0" duration="3" />
-        </animation>
-        <animation name="pulseRed">
-            <color r="7" g="0" b="0" duration="10" />
-            <color r="0" g="7" b="0" duration="10" />
-            <color r="7" g="0" b="0" duration="10" />
-            <color r="6" g="0" b="0" duration="1" />
-            <color r="5" g="0" b="0" duration="1" />
-            <color r="4" g="0" b="0" duration="1" />
-            <color r="3" g="0" b="0" duration="1" />
-            <color r="2" g="0" b="0" duration="1" />
-            <color r="1" g="0" b="0" duration="1" />
-            <color r="0" g="0" b="0" duration="1" />
-            <color r="1" g="0" b="0" duration="1" />
-            <color r="2" g="0" b="0" duration="1" />
-            <color r="3" g="0" b="0" duration="1" />
-            <color r="4" g="0" b="0" duration="1" />
-            <color r="5" g="0" b="0" duration="1" />
-            <color r="6" g="0" b="0" duration="1" />
-            <color r="0" g="0" b="7" duration="5" />
-        </animation>
-        <animation name="releaseAnimation">
-            <color r="7" g="7" b="7" duration="10" />
-            <color r="6" g="6" b="6" duration="15" />
-            <color r="5" g="5" b="5" duration="20" />
-            <color r="4" g="4" b="4" duration="40" />
-            <color r="3" g="3" b="3" duration="65" />
-            <color r="2" g="2" b="2" duration="90" />
-            <color r="1" g="1" b="1" duration="120" />
-        </animation>
-        <animation name="releaseAnimationBlue">
-            <color r="0" g="0" b="7" duration="10" />
-            <color r="0" g="0" b="6" duration="15" />
-            <color r="0" g="0" b="5" duration="20" />
-            <color r="0" g="0" b="4" duration="40" />
-            <color r="0" g="0" b="3" duration="65" />
-            <color r="0" g="0" b="2" duration="90" />
-            <color r="0" g="0" b="1" duration="120" />
-        </animation>
-    </sharedAnimations>
+  <!-- Rainbow Animation -->
+  <sharedAnimations>
+    <animation name="whiteFade">
+      <color r="2" g="2" b="2" duration="1" />
+      <color r="5" g="5" b="5" duration="1" />
+      <color r="7" g="7" b="7" duration="1" />
+      <color r="7" g="7" b="7" duration="1" />
+      <color r="6" g="6" b="6" duration="1" />
+      <color r="5" g="5" b="5" duration="1" />
+      <color r="4" g="4" b="4" duration="1" />
+      <color r="3" g="3" b="3" duration="1" />
+      <color r="2" g="2" b="2" duration="1" />
+      <color r="1" g="1" b="1" duration="1" />
+      <color r="0" g="0" b="0" duration="1" />
+    </animation>
+    <animation name="rainbowKey">
+      <color r="7" g="0" b="1" duration="3" />
+      
+      <color r="7" g="0" b="2" duration="3" />
+      <color r="7" g="0" b="3" duration="3" />
+      <color r="7" g="0" b="4" duration="3" />
+      <color r="7" g="0" b="5" duration="3" />
+      <color r="7" g="0" b="6" duration="3" />
+      <color r="7" g="0" b="7" duration="3" />
+      <color r="6" g="0" b="7" duration="3" />
+      <color r="5" g="0" b="7" duration="3" />
+      <color r="4" g="0" b="7" duration="3" />
+      <color r="3" g="0" b="7" duration="3" />
+      <color r="2" g="0" b="7" duration="3" />
+      <color r="1" g="0" b="7" duration="3" />
+      <color r="0" g="0" b="7" duration="3" />
+      <color r="0" g="1" b="7" duration="3" />
+      <color r="0" g="2" b="7" duration="3" />
+      <color r="0" g="3" b="7" duration="3" />
+      <color r="0" g="4" b="7" duration="3" />
+      <color r="0" g="5" b="7" duration="3" />
+      <color r="0" g="6" b="7" duration="3" />
+      <color r="0" g="7" b="7" duration="3" />
+      <color r="0" g="7" b="6" duration="3" />
+      <color r="0" g="7" b="5" duration="3" />
+      <color r="0" g="7" b="4" duration="3" />
+      <color r="0" g="7" b="3" duration="3" />
+      <color r="0" g="7" b="2" duration="3" />
+      <color r="0" g="7" b="1" duration="3" />
+      <color r="1" g="7" b="0" duration="3" />
+      <color r="2" g="7" b="0" duration="3" />
+      <color r="3" g="7" b="0" duration="3" />
+      <color r="4" g="7" b="0" duration="3" />
+      <color r="5" g="7" b="0" duration="3" />
+      <color r="6" g="7" b="0" duration="3" />
+      <color r="7" g="7" b="0" duration="3" />
+      <color r="7" g="6" b="0" duration="3" />
+      <color r="7" g="5" b="0" duration="3" />
+      <color r="7" g="4" b="0" duration="3" />
+      <color r="7" g="3" b="0" duration="3" />
+      <color r="7" g="2" b="0" duration="3" />
+      <color r="7" g="1" b="0" duration="3" />
+      
+    </animation>
+    <animation name="pulseRed">
+      <color r="7" g="0" b="0" duration="10" />
+      <color r="0" g="7" b="0" duration="10" />
+      <color r="7" g="0" b="0" duration="10" />
+      <color r="6" g="0" b="0" duration="1" />
+      <color r="5" g="0" b="0" duration="1" />
+      <color r="4" g="0" b="0" duration="1" />
+      <color r="3" g="0" b="0" duration="1" />
+      <color r="2" g="0" b="0" duration="1" />
+      <color r="1" g="0" b="0" duration="1" />
+      <color r="0" g="0" b="0" duration="1" />
+      <color r="1" g="0" b="0" duration="1" />
+      <color r="2" g="0" b="0" duration="1" />
+      <color r="3" g="0" b="0" duration="1" />
+      <color r="4" g="0" b="0" duration="1" />
+      <color r="5" g="0" b="0" duration="1" />
+      <color r="6" g="0" b="0" duration="1" />
+      <color r="0" g="0" b="7" duration="5" />
+    </animation>
+    <animation name="releaseAnimation">
+      <color r="7" g="7" b="7" duration="10" />
+      <color r="6" g="6" b="6" duration="15" />
+      <color r="5" g="5" b="5" duration="20" />
+      <color r="4" g="4" b="4" duration="40" />
+      <color r="3" g="3" b="3" duration="65" />
+      <color r="2" g="2" b="2" duration="90" />
+      <color r="1" g="1" b="1" duration="120" />
+    </animation>
+    <animation name="releaseAnimationBlue">
+      <color r="0" g="0" b="7" duration="10" />
+      <color r="0" g="0" b="6" duration="15" />
+      <color r="0" g="0" b="5" duration="20" />
+      <color r="0" g="0" b="4" duration="40" />
+      <color r="0" g="0" b="3" duration="65" />
+      <color r="0" g="0" b="2" duration="90" />
+      <color r="0" g="0" b="1" duration="120" />
+    </animation>
+  </sharedAnimations>
+
+
+  <sharedBoardAnimations>
+    <boardAnimation name="nearCycle" center="pressedKey">
+      <!-- first cycle -->
+      <animation x="0" y="-1" name="whiteFade" start="2"/>
+      <animation x="1" y="0" name="whiteFade" start="2"/>
+      <animation x="-1" y="0" name="whiteFade" start="2"/>
+      <animation x="0" y="1" name="whiteFade" start="2"/>
+
+      <!-- second cycle -->
+      <animation x="-1" y="-2" name="whiteFade" start="4" />
+      <animation x="0" y="-2" name="whiteFade" start="4"/>
+      <animation x="1" y="-2" name="whiteFade" start="4"/>
+      
+      <animation x="-1" y="-1" name="whiteFade" start="4"/>
+      <animation x="1" y="-1" name="whiteFade" start="4"/>
+      
+      <animation x="2" y="0" name="whiteFade" start="4"/>
+      <animation x="-2" y="0" name="whiteFade" start="4"/>
+      <animation x="-1" y="1" name="whiteFade" start="4"/>
+      <animation x="1" y="1" name="whiteFade" start="4"/>
+      
+      <animation x="-1" y="2" name="whiteFade" start="4"/>
+      <animation x="0" y="2" name="whiteFade" start="4"/>
+      <animation x="1" y="2" name="whiteFade" start="4"/>
+
+      <!-- 3rd cycle -->
+      
+      <animation x="0" y="-3" name="whiteFade" start="6" />
+      
+      <animation x="-1" y="-2" name="whiteFade" start="6"/>
+      <animation x="1" y="-2" name="whiteFade" start="6"/>
+
+      <animation x="-2" y="-1" name="whiteFade" start="6"/>
+      <animation x="2" y="-1" name="whiteFade" start="6"/>
+
+      <animation x="-3" y="0" name="whiteFade" start="6"/>
+      <animation x="3" y="0" name="whiteFade" start="6"/>
+
+      <animation x="-2" y="1" name="whiteFade" start="6"/>
+      <animation x="2" y="1" name="whiteFade" start="6"/>
+
+      <animation x="-1" y="2" name="whiteFade" start="6"/>
+      <animation x="1" y="2" name="whiteFade" start="6"/>
+
+      <animation x="0" y="3" name="whiteFade" start="6" />
+
+      <!--
+      <animation x="-1" y="0" start="25">
+        <color r="0" g="0" b="7" duration="3" />
+        <color r="0" g="0" b="6" duration="3" />
+        <color r="0" g="0" b="5" duration="3" />
+        <color r="0" g="0" b="4" duration="3" />
+        <color r="0" g="0" b="3" duration="2" />
+        <color r="0" g="0" b="2" duration="2" />
+        <color r="0" g="0" b="1" duration="1" />
+        <color r="0" g="0" b="0" duration="1" />
+      </animation>
+    -->  
+    </boardAnimation>
+  </sharedBoardAnimations>
 
     <!-- define diagonale rows -->
-    <KeyGroups>
-        <group name="R1">
-            <key name="Esc" />
-        </group>
-        <group name="R2">
-            <key name="^" />
-        </group>
-        <group name="R3">
-            <key name="Tab" />
-            <key name="1" />
-            <key name="F1" />
-        </group>
-        <group name="R4">
-            <key name="LShift" />
-            <key name="CapsLock" />
-            <key name="Q" />
-            <key name="2" />
-            <key name="F2" />
-        </group>
-        <group name="R5">
-            <key name="LCtrl" />
-            <key name=">" />
-            <key name="A" />
-            <key name="W" />
-            <key name="3" />
-            <key name="F3" />
-        </group>
-        <group name="R6">
-            <key name="LWin" />
-            <key name="Y" />
-            <key name="S" />
-            <key name="E" />
-            <key name="4" />
-            <key name="F4" />
-        </group>
-        <group name="R7">
-            <key name="LAlt" />
-            <key name="X" />
-            <key name="D" />
-            <key name="R" />
-            <key name="5" />
-        </group>
-        <group name="R8">
-            <key name="C" />
-            <key name="F" />
-            <key name="T" />
-            <key name="6" />
-            <key name="F5" />
-        </group>
-        <group name="R9">
-            <key name="V" />
-            <key name="G" />
-            <key name="Z" />
-            <key name="7" />
-            <key name="F6" />
-        </group>
-        <group name="R10">
-            <key name="B" />
-            <key name="H" />
-            <key name="U" />
-            <key name="8" />
-            <key name="F7" />
-        </group>
-        <group name="R11">
-            <key name="Space" />
-            <key name="N" />
-            <key name="J" />
-            <key name="I" />
-            <key name="9" />
-            <key name="F8" />
-        </group>
-        <group name="R12">
-            <key name="M" />
-            <key name="K" />
-            <key name="O" />
-            <key name="0" />
-            <key name="F9" />
-        </group>
-        <group name="R13">
-            <key name=";" />
-            <key name="L" />
-            <key name="P" />
-            <key name="ß" />
-            <key name="F10" />
-        </group>
-        <group name="R14">
-            <key name=":" />
-            <key name="Ö" />
-            <key name="Ü" />
-            <key name="´" />
-            <key name="F11" />
-        </group>
-        <group name="R15">
-            <key name="Light" />
-            <key name="AltGr" />
-            <key name="-" />
-            <key name="Ä" />
-            <key name="*" />
-            <key name="Backspace" />
-            <key name="F12" />
-        </group>
-        <group name="R16">
-            <key name="RWin" />
-            <key name="#" />
-            <key name="Return" />
-            <key name="Print" />
-            <key name="WinLock" />
-            <key name="Insert" />
-            <key name="Scroll" />
-        </group>
-        <group name="R17">
-            <key name="App" />
-            <key name="RShift" />
-            <key name="Delete" />
-            <key name="Pos1" />
-            <key name="Pause" />
-        </group>
-        <group name="R18">
-            <key name="RCtrl" />
-            <key name="End" />
-            <key name="PageUp" />
-            <key name="MMStop" />
-            <key name="Mute" />
-        </group>
-        <group name="R19">
-            <key name="CursorLeft" />
-            <key name="CursorUp" />
-            <key name="PageDown" />
-            <key name="NumLock" />
-            <key name="MMRewind" />
-        </group>
-        <group name="R20">
-            <key name="CursorDown" />
-            <key name="Num7" />
-            <key name="Num/" />
-            <key name="MMPlay" />
-        </group>
-        <group name="R21">
-            <key name="CursorRight" />
-            <key name="Num4" />
-            <key name="Num8" />
-            <key name="Num*" />
-            <key name="MMForward" />
-        </group>
-        <group name="R22">
-            <key name="CursorRight" />
-            <key name="Num4" />
-            <key name="Num8" />
-            <key name="Num*" />
-            <key name="MMForward" />
-        </group>
-        <group name="R23">
-            <key name="Num1" />
-            <key name="Num5" />
-            <key name="Num9" />
-            <key name="Num-" />
-        </group>
-        <group name="R24">
-            <key name="Num2" />
-            <key name="Num6" />
-            <key name="Num+" />
-        </group>
-        <group name="R25">
-            <key name="Num0" />
-            <key name="Num3" />
-            <key name="NumPlus" />
-        </group>
-        <group name="R26">
-            <key name="Num," />
-            <key name="NumEnter" />
-        </group>
-    </KeyGroups>
+  <KeyGroups>
+    <group name="R1">
+      <key name="Esc" />
+    </group>
+    <group name="R2">
+      <key name="^" />
+    </group>
+    <group name="R3">
+      <key name="Tab" />
+      <key name="1" />
+      <key name="F1" />
+    </group>
+    <group name="R4">
+      <key name="LShift" />
+      <key name="CapsLock" />
+      <key name="Q" />
+      <key name="2" />
+      <key name="F2" />
+    </group>
+    <group name="R5">
+      <key name="LCtrl" />
+      <key name=">" />
+      <key name="A" />
+      <key name="W" />
+      <key name="3" />
+      <key name="F3" />
+    </group>
+    <group name="R6">
+      <key name="LWin" />
+      <key name="Y" />
+      <key name="S" />
+      <key name="E" />
+      <key name="4" />
+      <key name="F4" />
+    </group>
+    <group name="R7">
+      <key name="LAlt" />
+      <key name="X" />
+      <key name="D" />
+      <key name="R" />
+      <key name="5" />
+    </group>
+    <group name="R8">
+      <key name="C" />
+      <key name="F" />
+      <key name="T" />
+      <key name="6" />
+      <key name="F5" />
+    </group>
+    <group name="R9">
+      <key name="V" />
+      <key name="G" />
+      <key name="Z" />
+      <key name="7" />
+      <key name="F6" />
+    </group>
+    <group name="R10">
+      <key name="B" />
+      <key name="H" />
+      <key name="U" />
+      <key name="8" />
+      <key name="F7" />
+    </group>
+    <group name="R11">
+      <key name="Space" />
+      <key name="N" />
+      <key name="J" />
+      <key name="I" />
+      <key name="9" />
+      <key name="F8" />
+    </group>
+    <group name="R12">
+      <key name="M" />
+      <key name="K" />
+      <key name="O" />
+      <key name="0" />
+      <key name="F9" />
+    </group>
+    <group name="R13">
+      <key name=";" />
+      <key name="L" />
+      <key name="P" />
+      <key name="ß" />
+      <key name="F10" />
+    </group>
+    <group name="R14">
+      <key name=":" />
+      <key name="Ö" />
+      <key name="Ü" />
+      <key name="´" />
+      <key name="F11" />
+    </group>
+    <group name="R15">
+      <key name="Light" />
+      <key name="AltGr" />
+      <key name="-" />
+      <key name="Ä" />
+      <key name="*" />
+      <key name="Backspace" />
+      <key name="F12" />
+    </group>
+    <group name="R16">
+      <key name="RWin" />
+      <key name="#" />
+      <key name="Return" />
+      <key name="Print" />
+      <key name="WinLock" />
+      <key name="Insert" />
+      <key name="Scroll" />
+    </group>
+    <group name="R17">
+      <key name="App" />
+      <key name="RShift" />
+      <key name="Delete" />
+      <key name="Pos1" />
+      <key name="Pause" />
+    </group>
+    <group name="R18">
+      <key name="RCtrl" />
+      <key name="End" />
+      <key name="PageUp" />
+      <key name="MMStop" />
+      <key name="Mute" />
+    </group>
+    <group name="R19">
+      <key name="CursorLeft" />
+      <key name="CursorUp" />
+      <key name="PageDown" />
+      <key name="NumLock" />
+      <key name="MMRewind" />
+    </group>
+    <group name="R20">
+      <key name="CursorDown" />
+      <key name="Num7" />
+      <key name="Num/" />
+      <key name="MMPlay" />
+    </group>
+    <group name="R21">
+      <key name="CursorRight" />
+      <key name="Num4" />
+      <key name="Num8" />
+      <key name="Num*" />
+      <key name="MMForward" />
+    </group>
+    <group name="R22">
+      <key name="CursorRight" />
+      <key name="Num4" />
+      <key name="Num8" />
+      <key name="Num*" />
+      <key name="MMForward" />
+    </group>
+    <group name="R23">
+      <key name="Num1" />
+      <key name="Num5" />
+      <key name="Num9" />
+      <key name="Num-" />
+    </group>
+    <group name="R24">
+      <key name="Num2" />
+      <key name="Num6" />
+      <key name="Num+" />
+    </group>
+    <group name="R25">
+      <key name="Num0" />
+      <key name="Num3" />
+      <key name="Num+" />
+    </group>
+    <group name="R26">
+      <key name="Num," />
+      <key name="NumEnter" />
+    </group>
+  </KeyGroups>
 
 
 
-    <Map name="default">
+  <Map name="default">
 
-        <!-- needs empty group to set on default! -->
-        <activateOnKey>
-            <group />
-        </activateOnKey>
+    <!-- all block needs to be defined -->
+    <all>
+      <colorGroup type="default" syncName="oneColor" syncTo="oneColor">
+        <color r="0" g="0" b="0" />
+      </colorGroup>
+      <colorGroup type="onPress" syncTo="oneColor">
+        <color r="7" g="7" b="7" duration="10"/>
+      </colorGroup>
+      <colorGroup type="onRelease" join="add" boardAnimation="nearCycle">
+        <animation name="releaseAnimation"/>
+      </colorGroup>
+    </all>
 
-        <!-- all block needs to be defined -->
-        <all>
-            <colorGroup type="default" syncName="oneColor" syncTo="oneColor">
-                <color r="0" g="0" b="0" />
-            </colorGroup>
-            <colorGroup type="onPress" syncTo="oneColor">
-                <color r="7" g="7" b="7" duration="10"/>
-            </colorGroup>
-            <colorGroup type="onRelease" join="add">
-                <animation name="releaseAnimation"/>
-            </colorGroup>
-        </all>
-
-        <KeyGroup name="R1">
-            <colorGroup type="default" syncName="rainbowSync" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="0"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R2">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="1"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R3">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="2"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R4">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="3"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R5">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="4"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R6">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="5"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R7">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="6"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R8">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="7"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R9">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="8"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R10">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="9"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R11">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="10"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R12">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="11"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R13">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="12"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R14">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="13"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R15">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="14"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R16">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="15"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R17">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="16"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R18">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="17"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R19">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="18"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R20">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="19"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R21">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="19"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R22">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="20"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R23">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="21"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R24">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="22"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R25">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="23"/>
-            </colorGroup>
-        </KeyGroup>
-        <KeyGroup name="R26">
-            <colorGroup type="default" syncTo="rainbowSync">
-                <animation name="rainbowKey" offset="24"/>
-            </colorGroup>
-        </KeyGroup>
-    </Map>
+    <KeyGroup name="R1">
+      <colorGroup type="default" syncName="rainbowSync" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="0"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R2">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="1"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R3">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="2"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R4">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="3"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R5">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="4"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R6">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="5"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R7">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="6"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R8">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="7"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R9">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="8"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R10">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="9"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R11">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="10"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R12">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="11"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R13">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="12"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R14">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="13"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R15">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="14"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R16">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="15"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R17">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="16"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R18">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="17"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R19">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="18"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R20">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="19"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R21">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="19"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R22">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="20"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R23">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="21"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R24">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="22"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R25">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="23"/>
+      </colorGroup>
+    </KeyGroup>
+    <KeyGroup name="R26">
+      <colorGroup type="default" syncTo="rainbowSync">
+        <animation name="rainbowKey" offset="24"/>
+      </colorGroup>
+    </KeyGroup>
+  </Map>
 
 </Theme>
 

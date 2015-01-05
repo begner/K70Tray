@@ -66,13 +66,34 @@ void KeyColor::setKeyDown(bool state) {
 		if (keyDown == false) {
 			// keyup
 			
+			justReleased = true;
+			
 			releaseTickCountDown = onReleaseColor.size(); // will be removed before tick!
+			
 			// DebugMsg("RELEASE %i\n", releaseTickCountDown);
 		}
+		else {
+			justPressed = true;
+			
+		}
+		
 		tick = 0;
 	}
 	
 }
+
+bool KeyColor::getJustPressed() {
+	bool oldstate = justPressed;
+	justPressed = false;
+	return oldstate;
+}
+
+bool KeyColor::getJustReleased() {
+	bool oldstate = justReleased;
+	justReleased = false;
+	return oldstate;
+}
+
 
 void KeyColor::setSyncName(string type, string syncName) {
 	// printf("set syncname '%s' to '%s'\n", type.c_str(), syncName.c_str());
@@ -87,6 +108,18 @@ void KeyColor::setSyncName(string type, string syncName) {
 
 }
 
+void KeyColor::setBoardAnimationName(string type, string boardAnimationNameName) {
+	if (type == string("onPress")) {
+		// DebugMsg("set onPress BoardAnimationName '%s' => '%s'", type.c_str(), boardAnimationNameName.c_str());
+		onPressBoardAnimationName = boardAnimationNameName;
+	}
+	if (type == string("onRelease")) {
+		// DebugMsg("set onRelease BoardAnimationName '%s' => '%s'", type.c_str(), boardAnimationNameName.c_str());
+		// printf("set onPress syncname to '%s'\n", syncName.c_str());
+		onReleaseBoardAnimationName = boardAnimationNameName;
+	}
+}
+
 string KeyColor::getSyncName() {
 	string ret = defaultSyncName;
 
@@ -97,6 +130,15 @@ string KeyColor::getSyncName() {
 		}
 	}
 	return ret;
+}
+
+string KeyColor::getBoardAnimationNameOnPress() {
+
+	return onPressBoardAnimationName;
+}
+
+string KeyColor::getBoardAnimationNameOnRelease() {
+	return onReleaseBoardAnimationName;
 }
 
 
@@ -131,7 +173,9 @@ void KeyColor::setFrame(unsigned int synctick) {
 	CountDownReleaseAnimation();
 
 	vector<RGB> * vec = getVectorByKeyState();
-	tick = synctick % vec->size();
+	if (vec->size() > 0) {
+		tick = synctick % vec->size();
+	}
 }
 
 RGB KeyColor::getColor() {

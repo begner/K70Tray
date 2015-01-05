@@ -2,6 +2,7 @@
 #include "Theme.h"
 #include "ThemeMap.h"
 
+
 using namespace std;
 
 
@@ -15,6 +16,7 @@ Theme::~Theme() {
 	keySwitchGroups.clear();
 	syncGroups.clear();
 	syncGroupTick.clear();
+
 }
 
 
@@ -45,6 +47,8 @@ void Theme::KeyUp(unsigned int keycode) {
 
 	
 }
+
+
 
 void Theme::SwitchMapOnKeyChange() {
 	// printf("SwitchMapOnKeyChange\n");

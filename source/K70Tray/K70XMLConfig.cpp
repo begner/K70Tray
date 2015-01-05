@@ -6,6 +6,7 @@
 #include "tinyxmlerror.cpp"
 #include "tinyxmlparser.cpp"
 #include "MainCorsairRGBK.h"
+#include "BoardAnimation.h"
 
 
 
@@ -179,6 +180,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 
 	map <string, vector<RGB>> sharedAnimationMap;
 	map <string, vector<string>> sharedKeyGroupMap;
+	map <string, BoardAnimation> sharedBoardAnimationMap;
 
 	TiXmlDocument doc(themeFileName.c_str());
 	if (doc.LoadFile())
@@ -248,11 +250,95 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 			}
 		}
 
+
+		// sharedBoardAnimations
+		for (TiXmlElement* sharedBANode = root->FirstChildElement("sharedBoardAnimations"); sharedBANode != NULL; sharedBANode = sharedBANode->NextSiblingElement("sharedBoardAnimations")) {
+			
+			for (TiXmlElement* baNode = sharedBANode->FirstChildElement("boardAnimation"); baNode != NULL; baNode = baNode->NextSiblingElement("boardAnimation")) {
+				if (!baNode->Attribute("name")) {
+					DebugMsg(" - WARNING: Attribute 'name' is missing for boardAnimation!");
+					continue;
+				}
+				string baName = string(baNode->Attribute("name"));
+				BoardAnimation bAnim;
+				bAnim.setName(baName);
+
+				for (TiXmlElement* baANode = baNode->FirstChildElement("animation"); baANode != NULL; baANode = baANode->NextSiblingElement("animation")) {
+					if (!baANode->Attribute("x")) {
+						DebugMsg(" - WARNING: Attribute 'x' is missing for animation!");
+						continue;
+					}
+					if (!baANode->Attribute("y")) {
+						DebugMsg(" - WARNING: Attribute 'y' is missing for animation!");
+						continue;
+					}
+					
+					int posX = atoi(baANode->Attribute("x"));
+					int posY = atoi(baANode->Attribute("y"))*-1;
+					vector<RGB>  myColors;
+
+					int start = 0;
+					if (baANode->Attribute("start")) {
+						start = atoi(baANode->Attribute("start"));
+					}
+
+
+					for (int i = 0; i < start; i++) {
+						RGB color;
+						color.setR(0);
+						color.setG(0);
+						color.setB(0);
+						myColors.push_back(color);
+					}
+
+					if (baANode->Attribute("name")) {
+						string animationName = string(baANode->Attribute("name"));
+						if (sharedAnimationMap.find(animationName) == sharedAnimationMap.end()) {
+							DebugMsg(" - WARNING: animation with name '%s' not found!", animationName.c_str());
+							continue;
+						}
+
+						vector<RGB> myAnimation = sharedAnimationMap.find(animationName)->second;
+						for (unsigned int i = 0; i < myAnimation.size(); i++) {
+							myColors.push_back(myAnimation[i]);
+						}
+					}
+
+					
+					for (TiXmlElement* baAColorNode = baANode->FirstChildElement("color"); baAColorNode != NULL; baAColorNode = baAColorNode->NextSiblingElement("color")) {
+						RGB color;
+						color.setR(atoi(baAColorNode->Attribute("r")));
+						color.setG(atoi(baAColorNode->Attribute("g")));
+						color.setB(atoi(baAColorNode->Attribute("b")));
+						
+						int duration = 0;
+						if (baAColorNode->Attribute("duration")) {
+							duration = atoi(baAColorNode->Attribute("duration"));
+						}
+						if (duration < 1) {
+							duration = 1;
+						}
+
+						for (int i = 0; i < duration; i++) {
+							myColors.push_back(color);
+						}
+						
+					}
+					DebugMsg(" - Added sharedBoardAnimations %s with duration of %i!", baName.c_str(), myColors.size());
+					bAnim.addBoardAnimation(posX, posY, myColors);
+					
+				}
+				sharedBoardAnimationMap.insert(make_pair(baName, bAnim));
+			}
+		}
+
+
 	
 		// iterate maps...
 		for (TiXmlElement* mapNode = root->FirstChildElement("Map"); mapNode != NULL; mapNode = mapNode->NextSiblingElement("Map"))
 		{
 			
+			bool activateOnKeyPresent = false;
 			string mapname = string(mapNode->Attribute("name"));
 			DebugMsg("Loaded Map: '%s'", mapname.c_str()); 
 			ThemeMap myMap(mapname);
@@ -261,11 +347,10 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 			for (TiXmlElement* mapConfigNode = mapNode->FirstChildElement(); mapConfigNode != NULL; mapConfigNode = mapConfigNode->NextSiblingElement())
 			{
 				string tagName = string(mapConfigNode->Value());
-				
 				// keygroups!
 				if (tagName == string("activateOnKey")) {
+				
 					// get groups
-
 					int groupId = 0;
 					// DebugMsg("Loaded Map: '%s'", mapname.c_str());
 					for (TiXmlElement* keyGroupNode = mapConfigNode->FirstChildElement("group"); keyGroupNode != NULL; keyGroupNode = keyGroupNode->NextSiblingElement("group")) {
@@ -284,38 +369,48 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 							*/
 							keysOfGroup.push_back(keyName);
 						}
-
+						activateOnKeyPresent = true;
 						currentTheme->AddKeySwitchGroup(mapname, groupId++, keysOfGroup);
 					}
 
 					// currentTheme->AddSwitchMapOnKey(string(mapConfigNode->Attribute("keyname")), mapname);
 				}
-				
-				
-				// keys
-				if (tagName == string("key") || tagName == string("all") || tagName == string("KeyGroup")) {
+				else { // (tagName == string("key") || tagName == string("all") || tagName == string("KeyGroup")) {
 
 					// create a temp keyGroup, if we need one...
 					vector <string> KeyGroup;
 
 					string baseKeyName;
 					if (tagName == string("all")) {
-						
 						baseKeyName = "";
 						DebugMsg(" - Loaded KeyAnimation for all Keys", baseKeyName);
 						KeyGroup.push_back(baseKeyName.c_str());
 					}
-					if (tagName == string("key")) {
+					else if (tagName == string("Key")) {
+						if (!mapConfigNode->Attribute("keyname")) {
+							DebugMsg(" - WARNING: Attribute 'keyname' is missing for key!");
+							continue;
+						}
 						baseKeyName = string(mapConfigNode->Attribute("keyname"));
 						DebugMsg(" - Loaded KeyAnimation for Key", baseKeyName.c_str());
 						KeyGroup.push_back(baseKeyName);
 					}
-					if (tagName == string("KeyGroup")) {
+					else if (tagName == string("KeyGroup")) {
+						if (!mapConfigNode->Attribute("name")) {
+							DebugMsg(" - WARNING: Attribute 'name' is missing for KeyGroup!");
+							continue;
+						}
 						string keyGroupName = string(mapConfigNode->Attribute("name"));
+						if (sharedKeyGroupMap.find(keyGroupName) == sharedKeyGroupMap.end()) {
+							DebugMsg(" - WARNING: KeyGroup with name '%s' not found!", keyGroupName.c_str());
+							continue;
+						}
 						KeyGroup = sharedKeyGroupMap[keyGroupName];
 						DebugMsg(" - Loaded KeyAnimation for KeyGroup '%s'", keyGroupName.c_str());
 					}
-
+					else {
+						DebugMsg(" - WARNING: Tag '%s' unknown.", tagName.c_str());
+					}
 					
 
 					// running throu keygroups
@@ -327,9 +422,10 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 							// do nothing
 						}
 						else {
-						// DebugMsg(" - - Key: '%s'", keyName.c_str());
+							 DebugMsg(" - - Key: '%s'", keyName.c_str());
 						}
 						*/
+						
 					
 
 						for (TiXmlElement* colorGroupNode = mapConfigNode->FirstChildElement("colorGroup"); colorGroupNode != NULL; colorGroupNode = colorGroupNode->NextSiblingElement("colorGroup"))
@@ -355,9 +451,11 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 
 							unsigned int colorGroupDuration = 0;
 
+
+
+
 							// check all colors
 							for (TiXmlElement* colorNode = colorGroupNode->FirstChildElement(); colorNode != NULL; colorNode = colorNode->NextSiblingElement()) {
-
 								string colorNodeTagName = string(colorNode->Value());
 
 								if (colorNodeTagName == string("color")) {
@@ -377,10 +475,23 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 
 									myMap.AddColorToKeyMap(keyName, type, color, duration);
 								}
-
-								if (colorNodeTagName == string("animation")) {
+								else if (colorNodeTagName == string("animation")) {
 									vector<RGB> myAnimation;
-									myAnimation = sharedAnimationMap[string(colorNode->Attribute("name"))];
+									if (!colorNode->Attribute("name")) {
+										DebugMsg(" - WARNING: Attribute 'name' is missing for animation!");
+										continue;
+									}
+									string sharedAnimationName = string(colorNode->Attribute("name"));
+									if (sharedAnimationMap.find(sharedAnimationName) == sharedAnimationMap.end()) {
+										DebugMsg(" - WARNING: animation with name '%s' not found!", sharedAnimationName.c_str());
+										continue;
+									}
+									
+									string animationName = string(colorNode->Attribute("name"));
+									DebugMsg(" - Loading shared Animation with name '%s'", animationName.c_str());
+									myAnimation = sharedAnimationMap.find(animationName)->second;
+									
+
 									int startPoint = 0;
 									// DebugMsg("Animation Size %i\n", myAnimation.size());
 									if (colorNode->Attribute("offset")) {
@@ -395,6 +506,9 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 										colorGroupDuration++;
 									}
 								}
+								else {
+									DebugMsg(" - WARNING: TagName '%s' not recognized!", colorNodeTagName.c_str());
+								}
 
 							} // end all colors in group
 
@@ -402,6 +516,15 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 							if (colorGroupNode->Attribute("syncName")) {
 								currentTheme->AddSyncGroup(string(colorGroupNode->Attribute("syncName")), colorGroupDuration);
 							}
+
+							// boardAnimations
+							if (colorGroupNode->Attribute("boardAnimation")) {
+								string boardAnimationName = string(colorGroupNode->Attribute("boardAnimation"));
+								DebugMsg(" - Added boardAnimation '%s'!", boardAnimationName.c_str());
+								myMap.SetBoardAnimationName(keyName, type, boardAnimationName);
+								myMap.addBoardAnimation(sharedBoardAnimationMap[boardAnimationName]);
+							}
+
 
 						} // colorNodes
 					} // kgc++
@@ -412,9 +535,17 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 			}
 			
 
+			// add an empty activateOnKey
+			if (!activateOnKeyPresent) {
+				vector<string> keysOfGroup;
+				currentTheme->AddKeySwitchGroup(mapname, 0, keysOfGroup);
+			}
+			
+
 			currentTheme->AddMap(myMap);
 			
 			
+
 		} // each map
 
 	}

@@ -3,9 +3,22 @@
 
   <!-- Rainbow Animation -->
   <sharedAnimations>
+    <animation name="whiteFade">
+      <color r="2" g="2" b="2" duration="1" />
+      <color r="5" g="5" b="5" duration="1" />
+      <color r="7" g="7" b="7" duration="1" />
+      <color r="7" g="7" b="7" duration="1" />
+      <color r="6" g="6" b="6" duration="1" />
+      <color r="5" g="5" b="5" duration="1" />
+      <color r="4" g="4" b="4" duration="1" />
+      <color r="3" g="3" b="3" duration="1" />
+      <color r="2" g="2" b="2" duration="1" />
+      <color r="1" g="1" b="1" duration="1" />
+      <color r="0" g="0" b="0" duration="1" />
+    </animation>
     <animation name="rainbowKey">
-      <color r="7" g="0" b="0" duration="3" />
       <color r="7" g="0" b="1" duration="3" />
+      
       <color r="7" g="0" b="2" duration="3" />
       <color r="7" g="0" b="3" duration="3" />
       <color r="7" g="0" b="4" duration="3" />
@@ -37,7 +50,7 @@
       <color r="3" g="7" b="0" duration="3" />
       <color r="4" g="7" b="0" duration="3" />
       <color r="5" g="7" b="0" duration="3" />
-      <!--<color r="6" g="7" b="0" duration="3" />-->
+      <color r="6" g="7" b="0" duration="3" />
       <color r="7" g="7" b="0" duration="3" />
       <color r="7" g="6" b="0" duration="3" />
       <color r="7" g="5" b="0" duration="3" />
@@ -45,6 +58,7 @@
       <color r="7" g="3" b="0" duration="3" />
       <color r="7" g="2" b="0" duration="3" />
       <color r="7" g="1" b="0" duration="3" />
+      
     </animation>
     <animation name="pulseRed">
       <color r="7" g="0" b="0" duration="10" />
@@ -85,7 +99,69 @@
     </animation>
   </sharedAnimations>
 
-  <!-- define diagonale rows -->
+
+  <sharedBoardAnimations>
+    <boardAnimation name="nearCycle" center="pressedKey">
+      <!-- first cycle -->
+      <animation x="0" y="-1" name="whiteFade" start="2"/>
+      <animation x="1" y="0" name="whiteFade" start="2"/>
+      <animation x="-1" y="0" name="whiteFade" start="2"/>
+      <animation x="0" y="1" name="whiteFade" start="2"/>
+
+      <!-- second cycle -->
+      <animation x="-1" y="-2" name="whiteFade" start="4" />
+      <animation x="0" y="-2" name="whiteFade" start="4"/>
+      <animation x="1" y="-2" name="whiteFade" start="4"/>
+      
+      <animation x="-1" y="-1" name="whiteFade" start="4"/>
+      <animation x="1" y="-1" name="whiteFade" start="4"/>
+      
+      <animation x="2" y="0" name="whiteFade" start="4"/>
+      <animation x="-2" y="0" name="whiteFade" start="4"/>
+      <animation x="-1" y="1" name="whiteFade" start="4"/>
+      <animation x="1" y="1" name="whiteFade" start="4"/>
+      
+      <animation x="-1" y="2" name="whiteFade" start="4"/>
+      <animation x="0" y="2" name="whiteFade" start="4"/>
+      <animation x="1" y="2" name="whiteFade" start="4"/>
+
+      <!-- 3rd cycle -->
+      
+      <animation x="0" y="-3" name="whiteFade" start="6" />
+      
+      <animation x="-1" y="-2" name="whiteFade" start="6"/>
+      <animation x="1" y="-2" name="whiteFade" start="6"/>
+
+      <animation x="-2" y="-1" name="whiteFade" start="6"/>
+      <animation x="2" y="-1" name="whiteFade" start="6"/>
+
+      <animation x="-3" y="0" name="whiteFade" start="6"/>
+      <animation x="3" y="0" name="whiteFade" start="6"/>
+
+      <animation x="-2" y="1" name="whiteFade" start="6"/>
+      <animation x="2" y="1" name="whiteFade" start="6"/>
+
+      <animation x="-1" y="2" name="whiteFade" start="6"/>
+      <animation x="1" y="2" name="whiteFade" start="6"/>
+
+      <animation x="0" y="3" name="whiteFade" start="6" />
+
+      <!--
+      <animation x="-1" y="0" start="25">
+        <color r="0" g="0" b="7" duration="3" />
+        <color r="0" g="0" b="6" duration="3" />
+        <color r="0" g="0" b="5" duration="3" />
+        <color r="0" g="0" b="4" duration="3" />
+        <color r="0" g="0" b="3" duration="2" />
+        <color r="0" g="0" b="2" duration="2" />
+        <color r="0" g="0" b="1" duration="1" />
+        <color r="0" g="0" b="0" duration="1" />
+      </animation>
+    -->  
+    </boardAnimation>
+  </sharedBoardAnimations>
+
+    <!-- define diagonale rows -->
   <KeyGroups>
     <group name="R1">
       <key name="Esc" />
@@ -251,7 +327,7 @@
     <group name="R25">
       <key name="Num0" />
       <key name="Num3" />
-      <key name="NumPlus" />
+      <key name="Num+" />
     </group>
     <group name="R26">
       <key name="Num," />
@@ -259,14 +335,9 @@
     </group>
   </KeyGroups>
 
-  
-  
+
+
   <Map name="default">
-    
-    <!-- needs empty group to set on default! -->
-    <activateOnKey>
-      <group />
-    </activateOnKey>
 
     <!-- all block needs to be defined -->
     <all>
@@ -276,11 +347,11 @@
       <colorGroup type="onPress" syncTo="oneColor">
         <color r="7" g="7" b="7" duration="10"/>
       </colorGroup>
-      <colorGroup type="onRelease" join="add">
+      <colorGroup type="onRelease" join="add" boardAnimation="nearCycle">
         <animation name="releaseAnimation"/>
       </colorGroup>
     </all>
-    
+
     <KeyGroup name="R1">
       <colorGroup type="default" syncName="rainbowSync" syncTo="rainbowSync">
         <animation name="rainbowKey" offset="0"/>
@@ -411,30 +482,6 @@
         <animation name="rainbowKey" offset="24"/>
       </colorGroup>
     </KeyGroup>
-  </Map>
-
-  <Map name="Ctrl">
-    <activateOnKey>
-      <group>
-        <key keyname="LCtrl" />
-      </group>
-      <group>
-        <key keyname="RCtrl" />
-      </group>
-    </activateOnKey>
-
-    <all>
-      <colorGroup type="default" syncName="Ctrl/pulseRed" syncTo="Ctrl/pulseRed">
-        <animation name="pulseRed" />
-      </colorGroup>
-      <colorGroup type="onPress" >
-        <color r="7" g="7" b="7" duration="10"/>
-      </colorGroup>
-      <colorGroup type="onRelease" join="overwrite">
-        <animation name="releaseAnimationBlue"/>
-      </colorGroup>
-    </all>
-    
   </Map>
 
 </Theme>

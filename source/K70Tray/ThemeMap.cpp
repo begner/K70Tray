@@ -22,14 +22,25 @@ ThemeMap::ThemeMap(string mapname)
 	ThemeMap();
 }
 
-
 /*
 * Constructor with Name
 */
 ThemeMap::ThemeMap()
 {
-	DebugMsg("Clearing ThemeMap...");
+	BoardAnimationMap.clear();
 	keyColorMap.clear();
+}
+
+
+ThemeMap::~ThemeMap() {
+	BoardAnimationMap.clear();
+	keyColorMap.clear();
+}
+
+
+void ThemeMap::addBoardAnimation(BoardAnimation ba) {
+	DebugMsg("Add BoardAnimation with size %i", ba.getAnimationSize());
+	BoardAnimationMap.insert(make_pair(ba.getName(), ba));
 }
 
 /*
@@ -45,6 +56,8 @@ void ThemeMap::setName(string mapname) {
 string ThemeMap::getName() {
 	return myMapName;
 }
+
+
 
 /*
 * Sets a Mapping of keyName & keyColor (will be done in XMLConfig!)
@@ -63,6 +76,25 @@ Theme * ThemeMap::getTheme() {
 	return parentTheme;
 }
 
+
+void ThemeMap::SetBoardAnimationName(string keyName, string type, string boardAnimationNameName) {
+
+	if (keyName != string("")) {
+		unsigned int keyCode = parentTheme->getKeyboard()->getCodeByName(keyName);
+		keyColorMap[keyCode].setBoardAnimationName(type, boardAnimationNameName);
+	}
+	else {
+		vector <unsigned int> allKeyCodes = parentTheme->getKeyboard()->GetAllKeyCodes();
+		for (vector <unsigned int>::iterator it = allKeyCodes.begin(); it != allKeyCodes.end(); ++it) {
+			unsigned int keyCode = (*it);
+			string keyName = parentTheme->getKeyboard()->getNameByCode(keyCode);
+			if (keyName != string(""))
+			{
+				SetBoardAnimationName(keyName, type, boardAnimationNameName);
+			}
+		}
+	}
+}
 
 /*
 * Clears all Colors of a keymap...
@@ -228,13 +260,56 @@ void ThemeMap::Tick() {
 		ledState[px][py].setR(curColor.getR());
 		ledState[px][py].setG(curColor.getG());
 		ledState[px][py].setB(curColor.getB());
-
-	
-
-	
-
-		
 		
 
+
+		
+		// copy Board Animations to active vector
+		if (kc->getJustReleased()) {
+			
+			string baor = kc->getBoardAnimationNameOnRelease();
+			// DebugMsg("getJustReleased: Board Animation '%s'", baor.c_str());
+			if (baor != string("")) {
+				// DebugMsg("Board Animation size %i", BoardAnimationMap.find(baor)->second.getAnimationSize());
+				
+				BoardAnimation newBA = BoardAnimationMap.find(baor)->second;
+				newBA.startAt(px, py);
+				activeBoardAnimations.push_back(newBA);
+			}
+			
+		}
+		if (kc->getJustPressed()) {
+			string baop = kc->getBoardAnimationNameOnPress();
+			// DebugMsg("getJustPressed: Board Animation '%s'", baop.c_str());
+			if (baop != string("")) {
+				BoardAnimation newBA = BoardAnimationMap.find(baop)->second;
+				newBA.startAt(px, py);
+				activeBoardAnimations.push_back(newBA);
+			}
+		}
+		
 	}
+	
+	
+	vector<BoardAnimation>::iterator it = activeBoardAnimations.begin();
+	while (it != activeBoardAnimations.end())
+	{
+		// execute activeBoardAnimations
+		it->tick();
+	
+		// delete finished BoardAnimations
+		if (it->animationEnded()) 
+		{
+			it = activeBoardAnimations.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+		
+	}
+	
+
+
+
 }

@@ -13,9 +13,12 @@
 #include <utility>
 #include <map>
 
+
 using namespace std;
 
 class ThemeMap;
+
+
 
 class Theme
 {
@@ -29,6 +32,7 @@ private:
 	vector<unsigned int>							getSwitchMapInvoledKeys();
 	map <string, unsigned int> syncGroups;
 	map <string, unsigned int> syncGroupTick;
+	
 	void TickSyncGroups();
 
 public:
@@ -48,6 +52,7 @@ public:
 	void Tick();
 	void AddSyncGroup(string name, unsigned int duration);
 	unsigned int getSyncGroupTick(string syncName);
+	
 };
 
 #endif

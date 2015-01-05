@@ -5,6 +5,7 @@
 #include "RGB.h"
 #include "Globals.h"
 #include "KeyColor.h"
+#include "BoardAnimation.h"
 #include <stdlib.h>
 #include <string>
 #include <stdio.h>
@@ -13,9 +14,10 @@
 #include <utility>
 #include <map>
 
-using namespace std;
 
+using namespace std;
 class Theme;
+
 
 class ThemeMap
 {
@@ -30,11 +32,12 @@ private:
 	// vector<string>		onPressKeyNames;
 	// vector<RGB>			onPressKeyColors;
 	map <unsigned int, KeyColor> keyColorMap; 
-
-	
+	vector<BoardAnimation>	activeBoardAnimations;
+	map <string, BoardAnimation> BoardAnimationMap;
 public:
 	ThemeMap();
 	ThemeMap(string mapname);
+	~ThemeMap();
 	void KeyDown(unsigned int keycode);
 	void KeyUp(unsigned int keycode);
 	// void SetBaseColor(RGB baseColor);
@@ -46,6 +49,7 @@ public:
 	void ClearKeyMapColors(string keyName, string type);
 	void SetSyncNameToKeyMap(string keyName, string type, string syncName);
 	void SetJoinMode(string keyName, string type, string joinMode);
+	void SetBoardAnimationName(string keyName, string type, string boardAnimationNameName);
 	void RemoveSync(string keyName, string type);
 	void Activate();
 	void setName(string mapname);
@@ -53,9 +57,9 @@ public:
 	void setMapping(string keyName, KeyColor keycolor);
 	void initialize();
 	void setTheme(Theme* theme);
-	
 	Theme* getTheme();
 	void Tick();
+	void addBoardAnimation(BoardAnimation ba);
 };
 
 #endif

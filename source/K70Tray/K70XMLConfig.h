@@ -22,6 +22,7 @@ using namespace std;
 
 class MainCorsairRGBK;
 
+
 class K70XMLConfig
 {
 public:

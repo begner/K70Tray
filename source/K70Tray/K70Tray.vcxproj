@@ -84,6 +84,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoardAnimation.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="convert.h" />
     <ClInclude Include="Globals.h" />
@@ -103,6 +104,7 @@
     <ClInclude Include="K70XMLConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoardAnimation.cpp" />
     <ClCompile Include="convert.cpp" />
     <ClCompile Include="K70Tray.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -135,7 +137,9 @@
   <ItemGroup>
     <Xml Include="config.xml" />
     <Xml Include="Layout.german.xml" />
-    <Xml Include="Theme.Dev.xml" />
+    <Xml Include="Theme.Dev.xml">
+      <SubType>Designer</SubType>
+    </Xml>
     <Xml Include="Theme.modifierLight.xml">
       <SubType>Designer</SubType>
     </Xml>

@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "BoardAnimation.h"
 #include "Theme.h"
+#include "Keyboard.h"
 #include "LightControl.h"
 
-extern RGB					ledState[K70_ROWS][K70_COLS];
+extern K70RGB					ledState[K70_ROWS][K70_COLS];
 extern unsigned char		g_XYk[K70_COLS][K70_ROWS];
 extern Theme				* currentTheme; // Current Theme
 extern LightControl			* pLC; // Current Light Control
@@ -24,7 +25,7 @@ BoardAnimation::~BoardAnimation()
 	placedAnimation.clear();
 }
 
-void BoardAnimation::addBoardAnimation(int x, int y, vector<RGB> color) {
+void BoardAnimation::addBoardAnimation(int x, int y, vector<K70RGB> color) {
 	string adress = getAdressOfAnimation(x, y);
 	placedAnimation.insert(make_pair(adress, color));
 }
@@ -68,7 +69,7 @@ void BoardAnimation::startAt(int x, int y) {
 void BoardAnimation::tick() {
 	// DebugMsg("BoardAnimation Tick at %i with size of %i", currentTick, placedAnimation.size());
 	int animationEndCount = 0;
-	for (map <string, vector<RGB>>::iterator it = placedAnimation.begin(); it != placedAnimation.end(); ++it) {		
+	for (map <string, vector<K70RGB>>::iterator it = placedAnimation.begin(); it != placedAnimation.end(); ++it) {		
 		int x = getPositionOfAnimationAdress(it->first, "x") * 4;
 		int y = getPositionOfAnimationAdress(it->first, "y");
 		// DebugMsg("BoardAnimation at %i x %i", startX + x, startY + y);
@@ -78,47 +79,26 @@ void BoardAnimation::tick() {
 		int animOnY = startY + y;
 
 		// out of range?
-		if (animOnY < 0 && animOnY >= K70_COLS) {
-			// DebugMsg("animOnY out of range %i", animOnY);
-			continue;
-		}
-		if (animOnX < 0 && animOnX >= K70_ROWS) {
-			// DebugMsg("animOnX out of range %i", animOnY);
+		if ((animOnY < 0 || animOnY > K70_COLS - 1) || (animOnX < 0 || animOnX > K70_ROWS - 1)) {
+			// set as ended - and continue to next item
+			animationEndCount++;
 			continue;
 		}
 
-		vector<RGB> * animation = &it->second;
+		vector<K70RGB> * animation = &it->second;
 		if (currentTick < animation->size()) {
 			
 			int keyCode = g_XYk[animOnY][animOnX];
-			int realX = pLC->getXYByKeyCode(keyCode, "x");
-			int realY = pLC->getXYByKeyCode(keyCode, "y");
 			if (keyCode > 0 && keyCode < 255) {
+				int realX = pLC->getXYByKeyCode(keyCode, "x");
+				int realY = pLC->getXYByKeyCode(keyCode, "y");
+				// if (currentTick == 0) {
+					// DebugMsg("Board Animation on %i->%i %i->%i 0x%X->%s", animOnX, realX, animOnY, realY, keyCode, currentTheme->getKeyboard()->getNameByCode(keyCode).c_str());
+				// }
+			
 				// DebugMsg("kc 0x%X, rx %i, ry %i:", keyCode, realX, realY);
 				ledState[realX][realY] = ledState[realX][realY] + animation->at(currentTick);
 			}
-			
-
-			// ledState[realX][realY] = animation->at(currentTick);
-			/*
-			// find nearest key
-			
-
-			for (int vx = -2; vx < 2; vx++) {
-
-				int animOnY = startY + y;
-				int animOnX = startX + vx + x;
-				if (animOnX > 0 && animOnX <= K70_ROWS &&
-					animOnY > 0 && animOnY <= K70_COLS) {
-					DebugMsg("Found on %i, %i, %i", animOnY, animOnX, g_XYk[animOnY][animOnX]);
-					ledState[animOnX][animOnY] = ledState[animOnX][animOnY] + animation->at(currentTick);
-				}
-				// DebugMsg("Set BoardAnimation %ix%i to %s ", startY + y, startX + vx + x, animation->at(currentTick).getRGBString().c_str());
-				
-			}
-			*/
-
-
 		}
 		else {
 			animationEndCount++;
@@ -126,7 +106,7 @@ void BoardAnimation::tick() {
 	}
 
 	// DebugMsg("animationEndCount %i vs size %i ", animationEndCount, placedAnimation.size());
-	if (animationEndCount == placedAnimation.size()) {
+	if (animationEndCount >= placedAnimation.size()) {
 		animationHasEnded = true;
 	}
 	currentTick++;

@@ -20,6 +20,14 @@ Theme::~Theme() {
 }
 
 
+void Theme::setName(string themeName) {
+	name = themeName;
+}
+
+string Theme::getName() {
+	return name;
+}
+
 
 void Theme::KeyDown(unsigned int keycode) {
 	// printf("Theme: KeyDown %i\n", keycode);
@@ -50,19 +58,39 @@ void Theme::KeyUp(unsigned int keycode) {
 
 
 
-void Theme::SwitchMapOnKeyChange() {
-	// printf("SwitchMapOnKeyChange\n");
-	
-	// get all pressed keys..
-	vector<unsigned int> keysPressed;
+bool Theme::SwitchMapOnKeyChange() {
+	return SwitchMapOnKeyChange(true);
+}
+
+// dont call directly! use SwitchMapOnKeyChange()
+bool Theme::SwitchMapOnKeyChange(bool withSpecialKeys) {
+
+	vector<string> keysPressed;
 	keysPressed = kb.getAllPressedKeys();
+
+	if (withSpecialKeys) {
+		// caps lock?
+		if ((GetKeyState(VK_CAPITAL) & 0x0001) != 0) {
+			keysPressed.push_back("CapsLockActivated");
+		}
+
+		// num lock?
+		if ((GetKeyState(VK_NUMLOCK) & 0x0001) != 0) {
+			keysPressed.push_back("NumLockActivated");
+		}
+	}
+
+
 	sort(keysPressed.begin(), keysPressed.end());
 	
-	for (unordered_map<string, vector<unsigned int> >::iterator it = keySwitchGroups.begin(); it != keySwitchGroups.end(); ++it) {
+	bool switchedMap = false;
+
+	for (unordered_map<string, vector<string> >::iterator it = keySwitchGroups.begin(); it != keySwitchGroups.end(); ++it) {
 		string combinedMapAndId = it->first;
 		string mapname = combinedMapAndId.substr(0, combinedMapAndId.find("_-_-_-"));
-		vector<unsigned int> keyMap = it->second;
 
+		vector<string> keyMap = it->second;
+		/*
 		string keyPressString = "";
 		for (vector<unsigned int>::iterator it = keysPressed.begin(); it != keysPressed.end(); ++it) {
 			keyPressString = keyPressString + ", " + to_string(*it);
@@ -71,7 +99,7 @@ void Theme::SwitchMapOnKeyChange() {
 		for (vector<unsigned int>::iterator it = keyMap.begin(); it != keyMap.end(); ++it) {
 			keyMapString = keyMapString + ", " + to_string(*it);
 		}
-
+		*/
 		int sizeA = keysPressed.size();
 		int sizeB = keyMap.size();
 
@@ -86,23 +114,26 @@ void Theme::SwitchMapOnKeyChange() {
 			}
 
 			if (are_equal) {
+				DebugMsg("KeyPresses are equal!");
 				ActivateMapByName(mapname);
+				switchedMap = true;
 			}
 		}
 	}
 
 	
+	return switchedMap;
 }
 
 
 void Theme::AddKeySwitchGroup(string mapname, int groupId, vector<string>keyNamesOfGroup) {
-	vector<unsigned int> keysOfGroupCodes;
+	vector<string> keysOfGroupCodes;
 	
 	string myMapId = string(mapname + "_-_-_-" + to_string(groupId));
 	
 	// convert in codes...
 	for (vector<string>::iterator it = keyNamesOfGroup.begin(); it != keyNamesOfGroup.end(); ++it) {
-		keysOfGroupCodes.push_back(kb.getCodeByName(*it));
+		keysOfGroupCodes.push_back(*it);
 	}
 
 	sort(keysOfGroupCodes.begin(), keysOfGroupCodes.end());
@@ -129,9 +160,21 @@ ThemeMap * Theme::GetActiveMap() {
 	return activeMap;
 }
 
+void Theme::StartTheme() {
+	DebugMsg("Start Theme...");
+	if (!SwitchMapOnKeyChange()) {
+		ActivateMapByName("default");
+	};
+}
+
 void Theme::ActivateMapByName(string mapname) {
 	
 	ThemeMap * myMap = GetMapByName(mapname);
+
+	if (!myMap) {
+		DebugMsg("WARNING: Map '%s' not found", mapname.c_str());
+		return;
+	}
 
 	if (!activeMap) {
 		myMap->Activate();
@@ -159,7 +202,15 @@ ThemeMap * Theme::GetMapByName(string mapname) {
 }
 
 void Theme::Tick() {
+	/*
+	if ((GetKeyState(VK_CAPITAL) & 0x0001) != 0)
+		DebugMsg("Caps Lock ON!");
+	else
+		DebugMsg("Caps Lock OFF!");
+		*/
+	// "Caps Lock ON!"
 	if (activeMap != NULL) {
+		
 		TickSyncGroups();
 		activeMap->Tick();
 	}
@@ -190,4 +241,14 @@ void Theme::TickSyncGroups() {
 		// printf("Sync '%s' is now on %i\n", syncName.c_str(), syncGroupTick[syncName]);
 	}
 }
+/*
+void Theme::setCapsLockMapName(string mapName) {
+	DebugMsg("set CapsLock MapName %s", mapName.c_str());
+	capsLockMapName = mapName;
+}
 
+void Theme::setNumLockMapName(string mapName) {
+	DebugMsg("set NumLock MapName %s", mapName.c_str());
+	numLockMapName = mapName;
+}
+*/

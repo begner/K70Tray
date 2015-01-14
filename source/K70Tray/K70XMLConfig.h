@@ -7,7 +7,7 @@
 #include "Shlwapi.h"
 #include "Theme.h"
 #include "ThemeMap.h"
-#include "RGB.h"
+#include "K70RGB.h"
 
 #include <stdlib.h>
 #include <string>

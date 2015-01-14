@@ -37,13 +37,13 @@ void KeyColor::setJoinMode(string type, string joinMode) {
 	
 }
 
-void KeyColor::addColor(string type, RGB color, unsigned int duration) {
+void KeyColor::addColor(string type, K70RGB color, unsigned int duration) {
 	
 	// duration auflösen!
 	// int duration = color.getDuration() + 1;
 	
-	RGB newColor; 
-	newColor.setRGB(color.getR(), color.getG(), color.getB());
+	K70RGB newColor; 
+	newColor.setK70RGB(color.getR(), color.getG(), color.getB());
 	
 	for (unsigned int i = 0; i < duration; i++) {
 		if (type == string("default")) {
@@ -110,7 +110,7 @@ void KeyColor::setSyncName(string type, string syncName) {
 
 void KeyColor::setBoardAnimationName(string type, string boardAnimationNameName) {
 	if (type == string("onPress")) {
-		// DebugMsg("set onPress BoardAnimationName '%s' => '%s'", type.c_str(), boardAnimationNameName.c_str());
+		DebugMsg("set onPress BoardAnimationName '%s' => '%s'", type.c_str(), boardAnimationNameName.c_str());
 		onPressBoardAnimationName = boardAnimationNameName;
 	}
 	if (type == string("onRelease")) {
@@ -146,7 +146,7 @@ string KeyColor::getBoardAnimationNameOnRelease() {
 void KeyColor::Tick() {
 	CountDownReleaseAnimation();
 		
-	vector<RGB> * vec = getVectorByKeyState();
+	vector<K70RGB> * vec = getVectorByKeyState();
 	if (tick >= vec->size() - 1) {
 		tick = 0;
 	}
@@ -172,23 +172,23 @@ resets tick and durationTicks - and called ticks for external tick int.
 void KeyColor::setFrame(unsigned int synctick) {
 	CountDownReleaseAnimation();
 
-	vector<RGB> * vec = getVectorByKeyState();
+	vector<K70RGB> * vec = getVectorByKeyState();
 	if (vec->size() > 0) {
 		tick = synctick % vec->size();
 	}
 }
 
-RGB KeyColor::getColor() {
-	RGB color;
-	vector<RGB> * vec = getVectorByKeyState();
+K70RGB KeyColor::getColor() {
+	K70RGB color;
+	vector<K70RGB> * vec = getVectorByKeyState();
 	if (vec->size() > 0 && vec->size() >= tick) {
 		color = vec->at(tick);
 	}
 
 	// printf("releaseTickCountDown: %i\n", releaseTickCountDown);
 	if (onReleaseColor.size() > 0 && releaseTickCountDown > 0) {
-		RGB releaseColor;
-		vector<RGB> * orcvec = &onReleaseColor;
+		K70RGB releaseColor;
+		vector<K70RGB> * orcvec = &onReleaseColor;
 
 		releaseColor = orcvec->at(onReleaseColor.size() - releaseTickCountDown);
 		if (onReleaseJoinMode == string("add")) {
@@ -203,8 +203,8 @@ RGB KeyColor::getColor() {
 	return color;
 }
 
-vector<RGB> * KeyColor::getVectorByKeyState() {
-	vector<RGB> * vec = &defaultColor;
+vector<K70RGB> * KeyColor::getVectorByKeyState() {
+	vector<K70RGB> * vec = &defaultColor;
 
 	// DebugMsg("- - %i\n", onPressColor.size());
 	if (keyDown && onPressColor.size() > 0) {

@@ -4,7 +4,7 @@
 #include "Constants.h"
 #include "Globals.h"
 // #include "OutputConsole.h"
-#include "RGB.h"
+#include "K70RGB.h"
 #include <stdlib.h>
 #include <string>
 #include <stdio.h>
@@ -16,18 +16,18 @@ class KeyColor
 	bool justPressed = false;
 	bool		keyDown = false;
 	unsigned int	tick = 0;
-	vector<RGB> * getVectorByKeyState();
+	vector<K70RGB> * getVectorByKeyState();
 
-	vector<RGB> defaultColor;
+	vector<K70RGB> defaultColor;
 	string		defaultSyncName = "";
 
 
-	vector<RGB> onPressColor;
+	vector<K70RGB> onPressColor;
 	string		onPressJoinMode = "overwrite";
 	string		onPressSyncName = "";
 	string		onPressBoardAnimationName = "";
 
-	vector<RGB>		onReleaseColor;
+	vector<K70RGB>		onReleaseColor;
 	unsigned int	releaseTickCountDown = 0;
 	void			CountDownReleaseAnimation();
 	string			onReleaseJoinMode = "overwrite";
@@ -36,11 +36,11 @@ public:
 	KeyColor();
 	~KeyColor();
 	void clear(string type);
-	void addColor(string type, RGB color, unsigned int duration);
+	void addColor(string type, K70RGB color, unsigned int duration);
 	void setKeyDown(bool state);
 	void Tick(); 
 	void setFrame(unsigned int synctick);
-	RGB getColor();
+	K70RGB getColor();
 	// void setSyncPulse(string type, int pulse);
 	string getSyncName();
 	void setSyncName(string type, string syncName);

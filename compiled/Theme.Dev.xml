@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Theme>
+
+  <sharedAnimations>
+    <animation name="whiteFade">
+      <color r="7" g="7" b="7" duration="3" />
+      <color r="6" g="6" b="6" duration="3" />
+      <color r="5" g="5" b="5" duration="3" />
+      <color r="4" g="4" b="4" duration="3" />
+      <color r="3" g="3" b="3" duration="3" />
+      <color r="2" g="2" b="2" duration="3" />
+      <color r="1" g="1" b="1" duration="3" />
+    </animation>
+  </sharedAnimations>
+    
+  <sharedBoardAnimations>
+    <boardAnimation name="testBoard" center="pressedKey">
+      <animation x="0" y="-1" name="whiteFade" start="0"/>
+      <animation x="1" y="-1" name="whiteFade" start="5"/>
+      <animation x="1" y="0" name="whiteFade" start="10"/>
+      <animation x="1" y="1" name="whiteFade" start="15"/>
+      <animation x="0" y="1" name="whiteFade" start="20"/>
+      <animation x="-1" y="0" start="25">
+        <color r="0" g="0" b="7" duration="3" />
+        <color r="0" g="0" b="6" duration="3" />
+        <color r="0" g="0" b="5" duration="3" />
+        <color r="0" g="0" b="4" duration="3" />
+        <color r="0" g="0" b="3" duration="2" />
+        <color r="0" g="0" b="2" duration="2" />
+        <color r="0" g="0" b="1" duration="1" />
+        <color r="0" g="0" b="0" duration="1" />
+      </animation>
+    </boardAnimation>
+    
+    <!--
+    <boardAnimation center="key" keyname="F">
+    
+    </boardAnimation>
+    -->
+  </sharedBoardAnimations>
+
+  <Map name="default">
+
+    <all>
+      <colorGroup type="default">
+        <color r="7" g="0" b="0" />
+      </colorGroup>
+      <colorGroup type="onPress" >
+        <color r="0" g="0" b="7" />
+      </colorGroup>
+      <colorGroup type="onRelease" boardAnimation="testBoard">
+        <color r="0" g="7" b="0" duration="10" />f
+      </colorGroup>
+    </all>
+
+  </Map>
+
+
+</Theme>

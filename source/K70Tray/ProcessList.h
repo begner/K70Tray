@@ -7,9 +7,16 @@
 
 class ProcessList
 {
+private:
+	DWORD activeProcessId = -1;
+	string getNameByProcessId(DWORD pid);
+	
 public:
 	ProcessList();
 	~ProcessList();
-	bool FindRunningProcess(string processName);
+	bool FindRunningProcess(string processName, DWORD curProcessId);
+	bool checkProcessChanged();
+	DWORD determineActiveProcessId();
+	string getActiveProcessName();
 };
 

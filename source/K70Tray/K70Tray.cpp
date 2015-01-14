@@ -6,7 +6,7 @@
 #include "Constants.h"
 #include "MainCorsairRGBK.h"
 #include "KeyBoardDevice.h"
-#include "RGB.h"
+#include "K70RGB.h"
 #include "ProcessList.h"
 #include <stdarg.h>  
 #include <string>
@@ -33,10 +33,12 @@ BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 // INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK	LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK	SysmsgProc(int nCode, WPARAM wParam, LPARAM lParam);
 void				AppStart();
 INT_PTR CALLBACK	Main(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	ErrorStartup(HWND, UINT, WPARAM, LPARAM);
+NOTIFYICONDATA		niData; 
 void DebugMsg(string msg, ...);
 vector<string> themeItems;
 vector<string> layoutItems;
@@ -45,7 +47,8 @@ void addLayoutToDropdown(string layoutname);
 void SetCurrentLayout(string layoutname);
 void SetCurrentTheme(string layoutname);
 DWORD GetDLLVersion(LPCTSTR lpszDllName);
-
+void ApplicationEndCleanup();
+ProcessList processList;
 
 // global window Handler
 HWND				ghWnd;
@@ -55,7 +58,9 @@ HINSTANCE			ghInst;
 HWND				ghDlgMain;
 
 // Keyboard Hook Stuff...
-HHOOK				hHook = 0;
+HHOOK				keyboardHook = 0;
+HHOOK				sysmsgHook = 0;
+
 
 
 // Some Global Exchange Vars... :(
@@ -70,10 +75,16 @@ unsigned char		g_keyCodes[K70_KEY_MAX];	// Key Codes for each Key
 float				g_keySizes[K70_KEY_MAX];	// Key Sizes Array
 string				g_keyNames[K70_KEY_MAX];	// Key Names Array
 int					g_iInterval = K70_DEFAULT_INTERVAL; // Global Update Interval
-MainCorsairRGBK		* mainCorsairRGBK; // Main App
+MainCorsairRGBK		* mainCorsairK70RGBK; // Main App
 KeyboardDevice		* keyBoardDevice; // Keyboard Device (Hardware stuff)
-unsigned char		g_LEDState[K70_KEY_MAX][3], g_PrevLEDState[144][3]; // Ledstates and Previous LedStates
+unsigned char		g_LEDState[K70_KEY_MAX][3];
+unsigned char		g_PrevLEDState[144][3]; // Ledstates and Previous LedStates
+K70RGB				ledState[K70_ROWS][K70_COLS] = {};
 
+
+const int ID_TIMER = 1;
+
+static HBITMAP hBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_MAINBACKGROUND));
 
 
 //
@@ -120,7 +131,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 // DebugMsg("Something: %i = %s", myInt, myString);
 // 
 void DebugMsg(string msg, ...) {
-	
+
 	msg += "\n";
 	char buffer[2048];
 	va_list args;
@@ -128,14 +139,26 @@ void DebugMsg(string msg, ...) {
 	vsprintf_s(buffer, msg.c_str(), args);
 	perror(buffer);
 	va_end(args);
-
-	
 	string smsg = buffer;
-	wstring wmsg(smsg.begin(), smsg.end());
+
+	/*
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	char bufferTime[2048] = { '\0' };
+
+	int hour = (INT)st.wHour;
+	int min = (INT)st.wMinute;
+	int sec = (INT)st.wSecond;
+
+	// buffer = smsg.c_str();
+	sprintf_s(bufferTime, sizeof(bufferTime), string("%d:%d:d% " + smsg).c_str(), hour, min, sec);
+	string smsgd = bufferTime;
+	*/
+	
+	wstring wmsg = utf8_decode(smsg);
 
 	WCHAR * newText = (WCHAR*)wmsg.c_str();
 	
-
 	// get edit control from dialog
 	HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_APPMESSAGES);
 
@@ -177,11 +200,11 @@ void addThemeToDropdown(string themename)
 //
 // Set current selected theme (in combobox)
 //
-void SetCurrentTheme(string layoutname) {
-	DebugMsg("Set LayoutBox to %s", layoutname.c_str());
-	int index;
+void SetCurrentTheme(string themename) {
+	DebugMsg("Set Themebox to '%s'", themename.c_str());
+	int index = -1;
 	for (vector<string>::iterator it = themeItems.begin(); it < themeItems.end(); it++) {
-		if (*it == layoutname){
+		if (*it == themename){
 			index = it - themeItems.begin();
 		}
 	}
@@ -207,13 +230,15 @@ void addLayoutToDropdown(string layoutname)
 // Set current selected layout (in combobox)
 //
 void SetCurrentLayout(string layoutname) {
-	DebugMsg("Set LayoutBox to %s", layoutname.c_str());
-	int index;
+	DebugMsg("Set LayoutBox to '%s'", layoutname.c_str());
+	// DebugMsg("Size: '%i'", layoutItems.size());
+	int index = -1;
 	for (vector<string>::iterator it = layoutItems.begin(); it < layoutItems.end(); it++) {
 		if (*it == layoutname){
 			index = it - layoutItems.begin();
 		}
 	}
+	
 	DebugMsg("index %i", index);
 	HWND hWndComboBox = GetDlgItem(ghDlgMain, IDC_LAYOUTSELECT);
 	SendMessage(hWndComboBox, CB_SETCURSEL, (WPARAM)index, (LPARAM)0);
@@ -296,35 +321,49 @@ DWORD GetDLLVersion(LPCTSTR lpszDllName)
 //
 BOOL StartInstance() {
 
-	ProcessList testProcess;
-
+	
+	DebugMsg("Search for CorsairHID.exe...");
 	// detect active corsair CUE
-	if (testProcess.FindRunningProcess("CorsairHID.exe")) {
+	if (processList.FindRunningProcess("CorsairHID.exe", GetCurrentProcessId())) {
 		DialogBox(ghInst, MAKEINTRESOURCE(IDD_CUERUNNING), ghWnd, ErrorStartup);
-		return false;
+		return (INT_PTR)FALSE;
 	};
 
+	DebugMsg("Search for another instance of K70Tray.exe");
 	// detects itself... :(
-	/*
-	if (testProcess.FindRunningProcess("K70Tray.exe")) {
+	if (processList.FindRunningProcess("K70Tray.exe", GetCurrentProcessId())) {
 		DialogBox(ghInst, MAKEINTRESOURCE(IDD_K70RUNNING), ghWnd, ErrorStartup);
-		return false;
+		return (INT_PTR)FALSE;
 	};
-	*/
+	
+	
+
+	
 
 	DebugMsg("App started...");
 
 	// create MainClass
-	mainCorsairRGBK = new MainCorsairRGBK();
+	mainCorsairK70RGBK = new MainCorsairRGBK();
 
 	// Initialize LLV Keyboard Hook
 	DebugMsg("Setup Keyboard Hook");
-	hHook = SetWindowsHookEx(WH_KEYBOARD_LL, &LowLevelKeyboardProc, ghInst, NULL);
-	if (hHook == NULL)
+	keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, &LowLevelKeyboardProc, ghInst, NULL);
+	if (keyboardHook == NULL)
 	{
 		DebugMsg("Error - Could not set Keyboard Hook");
 		return (INT_PTR)FALSE;
 	}
+
+	/*
+	DebugMsg("Setup Sysmessage Hook");
+	sysmsgHook = SetWindowsHookEx(WH_GETMESSAGE, &SysmsgProc, GetModuleHandle(NULL), NULL);
+	if (sysmsgHook == NULL)
+	{
+		DebugMsg("Error - Could not set Sysmessage Hook");
+		return (INT_PTR)FALSE;
+	}
+	*/
+
 
 	// Detect Corsair Keyboard
 	keyBoardDevice = new KeyboardDevice();
@@ -339,7 +378,17 @@ BOOL StartInstance() {
 	// Create Animation Thread (Wich starts the app)
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)AppStart, NULL, NULL, NULL);
 
-	return TRUE;
+	return (INT_PTR)TRUE;
+}
+
+
+LRESULT CALLBACK SysmsgProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	if (mainCorsairK70RGBK) {
+		DebugMsg("SYSMSG!");
+	}
+
+	return CallNextHookEx(sysmsgHook, nCode, wParam, lParam);
 }
 
 //
@@ -370,13 +419,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	ghWnd = hWnd;
 
 
+
 	// Notification Icon (System Tray)
 	// from http://www.codeproject.com/Articles/4768/Basic-use-of-Shell_NotifyIcon-in-Win32
 
 	// zero the structure - note: Some Windows funtions
 	// require this but I can't be bothered to remember
 	// which ones do and which ones don't.
-	NOTIFYICONDATA niData;
+	
 	ZeroMemory(&niData, sizeof(NOTIFYICONDATA));
 
 
@@ -426,18 +476,27 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	// Create Tray Icon
 	Shell_NotifyIcon(NIM_ADD, &niData);
 
+	
 	// Create Main Window (Dialoge)
 	ghDlgMain = CreateDialog(ghInst, MAKEINTRESOURCE(IDD_MAINWIN), ghWnd, Main);
 	SendMessage(ghDlgMain, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(ghInst, MAKEINTRESOURCE(IDI_K70TRAY)));
 	SendMessage(ghDlgMain, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(ghInst, MAKEINTRESOURCE(IDI_K70TRAY)));
 	
+
+	
+
+	int ret = SetTimer(ghDlgMain, ID_TIMER, 30, NULL);
+	if (ret == 0) {
+		// MessageBox(hWnd, "Could not SetTimer()!", "Error", MB_OK | MB_ICONEXCLAMATION);
+	}
+
+
 	// Hide it (initialize)
 	ShowWindow(ghDlgMain, SW_HIDE);
 	UpdateWindow(ghDlgMain);
 
 	// Lets Start...
-	StartInstance();
-	return true;
+	return StartInstance();
 }
 
 //
@@ -454,7 +513,11 @@ void ShowContextMenu()
 
 	// Adding Themes
 	for (vector<string>::iterator it = themeItems.begin(); it < themeItems.end(); it++) {
-		InsertMenu(hMenu, position++, MF_BYPOSITION | MF_STRING, SYTEMTRAY_THEMESELECTBEGIN + (it - themeItems.begin()), (s2ws((*it)).c_str()));
+		UINT uFlags = MF_BYPOSITION | MF_STRING;
+		if ((*it) == currentTheme->getName()) {
+			uFlags = uFlags | MF_CHECKED;
+		}
+		InsertMenu(hMenu, position++, uFlags, SYTEMTRAY_THEMESELECTBEGIN + (it - themeItems.begin()), (s2ws((*it)).c_str()));
 	}
 	InsertMenu(hMenu, position++, MF_MENUBARBREAK, 0, NULL);
 	InsertMenu(hMenu, position++, MF_BYPOSITION | MF_STRING, IDM_EXIT, (LPCWSTR)L"Exit");
@@ -488,7 +551,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	
 	switch (message)
-	{
+	{/*
+	case WM_SYSCOMMAND:
+		// DebugMsg("WndProc WM_SYSCOMMAND %X", LOWORD(wParam));
+
+		
+		if (LOWORD(wParam) == SC_MONITORPOWER){
+			DebugMsg("WndProc SC_MONITORPOWER %X", lParam);
+			currentTheme->StopTheme();
+		}
+		return 0;
+		break;
+		*/
 	case SYTEMTRAY_NOTIFYICON:
 		switch (lParam)
 		{
@@ -518,15 +592,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
+			if (wmId >= SYTEMTRAY_THEMESELECTBEGIN && wmId < SYTEMTRAY_THEMESELECTBEGIN + themeItems.size())
+			{
+				int themeId = wmId - SYTEMTRAY_THEMESELECTBEGIN;
+				DebugMsg("Switch Theme by ContextMenu to %i", themeId);
+				mainCorsairK70RGBK->ChangeTheme(themeItems[themeId]);
+
+			}	
+			else
+			{
+				return DefWindowProc(hWnd, message, wParam, lParam);
+			}
 		}
 		break;
+	
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
-		PostQuitMessage(0);
+		ApplicationEndCleanup();
+	
+		break;
+	//power management code here
+	case WM_POWERBROADCAST:
+		DebugMsg("WM_POWERBROADCAST %i %i", wParam, lParam);
+
+
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
@@ -556,6 +648,12 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	return (INT_PTR)FALSE;
 }
 
+
+void ApplicationEndCleanup() {
+	Shell_NotifyIcon(NIM_DELETE, &niData);
+	PostQuitMessage(0);
+}
+
 //
 // Message handler for about box.
 // 
@@ -571,7 +669,7 @@ INT_PTR CALLBACK ErrorStartup(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			EndDialog(hDlg, LOWORD(wParam));
-			PostQuitMessage(0);
+			ApplicationEndCleanup();
 			return (INT_PTR)TRUE;
 		}
 		break;
@@ -584,48 +682,126 @@ INT_PTR CALLBACK ErrorStartup(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 //
 INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	PAINTSTRUCT ps;
-	HDC hdc;
+
 
 	UNREFERENCED_PARAMETER(lParam);
 	switch (message)
 	{
+		/*
+		case WM_SYSCOMMAND:
+		{
+			DebugMsg("WM_SYSCOMMAND %X", LOWORD(wParam));
+
+
+			if (LOWORD(wParam) == SC_MONITORPOWER){
+				DebugMsg("SC_MONITORPOWER %X", lParam);
+				currentTheme->StopTheme();
+			}
+			return 0;
+		}
+		break;
+		*/
 	case WM_INITDIALOG:
-		SendMessage(GetDlgItem(ghDlgMain, IDC_APPMESSAGES), EM_SETLIMITTEXT, (WPARAM)0, (LPARAM)0);
+		// DebugMsg("INITDIALOG!");
+		// SendMessage(GetDlgItem(ghDlgMain, IDC_APPMESSAGES), EM_SETLIMITTEXT, (WPARAM)0, (LPARAM)0);
 		return (INT_PTR)TRUE;
 		break;
+	case WM_TIMER:
+	{
+		mainCorsairK70RGBK->PaintKeyboardState();
+		
+		if (processList.checkProcessChanged()) {
+			DebugMsg("Process Changed to: '%s'", processList.getActiveProcessName().c_str());
+		}
+	}
+	break;
+	case WM_SETFOCUS:
+	case WM_KILLFOCUS:
+	{
+		/*
+		DebugMsg("SET FOCUS");
+		if (LOWORD(wParam) == IDC_THEMESELECT){
+			DebugMsg("TO IDC_THEMESELECT");
+		}
+		*/
+	}
+	break;
 	case WM_PAINT:
-		hdc = BeginPaint(hDlg, &ps);
+	{
+		
+		HDC hdcInst, hdcBitmap;
+		PAINTSTRUCT ps;
+		BITMAP bp;
+		RECT r;
+
+		
+		hdcInst = BeginPaint(hDlg, &ps);
+
+		// Create a memory device compatible with the above DC variable
+
+		hdcBitmap = CreateCompatibleDC(hdcInst);
+
+		// Select the new bitmap
+
+		SelectObject(hdcBitmap, hBitmap);
+
+		GetObject(hBitmap, sizeof(bp), &bp);
+
+		// Get client coordinates for the StretchBlt() function
+
+		GetClientRect(hDlg, &r);
+
+		// stretch bitmap across client area
+
+		BitBlt(hdcInst, 0, 0, bp.bmWidth, bp.bmHeight, hdcBitmap, 0, 0, SRCCOPY);
+
+		// Cleanup
+
+		DeleteDC(hdcBitmap);
 		EndPaint(hDlg, &ps);
+		
+	}
 		break;
 	
 	case WM_CTLCOLORSTATIC:
+	{
 		// Make Transparent Backgrounds for everything but..
 		// DebugMsg("WM_CTLCOLORSTATIC: %i %i", (HWND)lParam, GetDlgItem(ghDlgMain, IDC_APPMESSAGES));
 		if ((HWND)lParam != GetDlgItem(ghDlgMain, IDC_APPMESSAGES)) {
-			hdc = (HDC)wParam;
+			HDC hdc = (HDC)wParam;
 			SetTextColor(hdc, RGB(0, 0, 0));
 			SetBkMode(hdc, TRANSPARENT);
 			return (LRESULT)GetStockObject(NULL_BRUSH);
 		}
-		
+	}
 		break;
 	case WM_COMMAND:
+	{
 		// Theme Select Change
 		if (LOWORD(wParam) == IDC_THEMESELECT){
 			if (HIWORD(wParam) == CBN_SELCHANGE)
 			{
+				SetFocus(hDlg); 
 				int selectedThemeIndex = SendMessage((HWND)lParam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
-				mainCorsairRGBK->ChangeTheme(themeItems[selectedThemeIndex]);
+				mainCorsairK70RGBK->ChangeTheme(themeItems[selectedThemeIndex]);
+				
+			}
+			else if (HIWORD(wParam) == CBN_SETFOCUS) {
+			
 			}
 		}
 		// Layout Select Change
 		if (LOWORD(wParam) == IDC_LAYOUTSELECT){
 			if (HIWORD(wParam) == CBN_SELCHANGE)
 			{
+				SetFocus(hDlg);
 				int savingLayoutIndex = SendMessage((HWND)lParam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
-				mainCorsairRGBK->ChangeTheme(layoutItems[savingLayoutIndex]);
+				mainCorsairK70RGBK->ChangeLayout(layoutItems[savingLayoutIndex]);
 			}
+			else if (HIWORD(wParam) == CBN_SETFOCUS) {
+	
+			}
+
 		}
 		// About
 		else if (LOWORD(wParam) == IDC_BUTTONABOUT){
@@ -634,6 +810,14 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		} 
 		// Clear Console
 		else if (LOWORD(wParam) == IDC_CLEARCONSOLE){
+			RECT rect;
+			HWND hctrl = GetDlgItem(ghDlgMain, IDC_KEYBOARDPREVIEW);
+			GetClientRect(hctrl, &rect);
+			MapWindowPoints(hctrl, ghDlgMain, (POINT *)&rect, 2);
+			InvalidateRect(ghDlgMain, &rect, TRUE);
+
+
+			// InvalidateRect(GetDlgItem(ghDlgMain, IDC_KEYBOARDPREVIEW), NULL, FALSE);
 			HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_APPMESSAGES);
 			SendMessage(hwndOutput, WM_SETTEXT, (WPARAM)0, LPARAM(L""));
 			UpdateWindow(hDlg);
@@ -642,33 +826,44 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		else if (LOWORD(wParam) == IDC_THEMERELOAD){
 			HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_THEMESELECT);
 			int selectedThemeIndex = SendMessage(hwndOutput, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
-			mainCorsairRGBK->ChangeTheme(themeItems[selectedThemeIndex]);
-	}
+			mainCorsairK70RGBK->ChangeTheme(themeItems[selectedThemeIndex]);
+		}
 		// Exit of Window (means hide)
 		else if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			ShowWindow(ghDlgMain, SW_HIDE);
 			return (INT_PTR)TRUE;
 		}
+	}
 		break;
 	}
 	return (INT_PTR)FALSE;
 }
 
 //
-// Keyboard Hook -> forward to mainCorsairRGBK
+// Keyboard Hook -> forward to mainCorsairK70RGBK
 //
 LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	mainCorsairRGBK->KeyboardHook(nCode, wParam, lParam);
+	if (mainCorsairK70RGBK) {
+		mainCorsairK70RGBK->KeyboardHook(nCode, wParam, lParam);
+	}
+	
 
-	return CallNextHookEx(hHook, nCode, wParam, lParam);
+	return CallNextHookEx(keyboardHook, nCode, wParam, lParam);
 }
 
 //
-// Start the App -> forward to mainCorsairRGBK
+// Start the App -> forward to mainCorsairK70RGBK
 //
-void AppStart() 
+void AppStart()
 {
-	mainCorsairRGBK->AppStart();
+	RECT rcClient;
+	HWND pArea = GetDlgItem(ghDlgMain, IDC_KEYBOARDPREVIEW);
+	HDC hdc = GetDC(pArea);
+
+	GetClientRect(pArea, &rcClient);
+	mainCorsairK70RGBK->AppStart(hdc, &rcClient);
+
+	ReleaseDC(pArea, hdc);
 }

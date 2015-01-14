@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Theme>
+lkhgfdh
+  <!-- Rainbow Animation -->
+  <sharedAnimations>
+    <animation name="releaseAnimation">
+      <color r="7" g="7" b="7" duration="2" />
+    </animation>
+   
+  </sharedAnimations>
+
+
+  <sharedBoardAnimations>
+    <boardAnimation name="testBoard" center="pressedKey">
+      <!-- first cycle -->
+      <animation x="1" y="0" name="releaseAnimation" start="4"/>
+      <animation x="2" y="0" name="releaseAnimation" start="6"/>
+      <animation x="3" y="0" name="releaseAnimation" start="8"/>
+      <animation x="4" y="0" name="releaseAnimation" start="10"/>
+      <animation x="5" y="0" name="releaseAnimation" start="12"/>
+      <animation x="6" y="0" name="releaseAnimation" start="14"/>
+      <animation x="7" y="0" name="releaseAnimation" start="16"/>
+      <animation x="8" y="0" name="releaseAnimation" start="18"/>
+      <animation x="9" y="0" name="releaseAnimation" start="20"/>
+      <animation x="10" y="0" name="releaseAnimation" start="22"/>
+      <animation x="11" y="0" name="releaseAnimation" start="24"/>
+
+    </boardAnimation>
+  </sharedBoardAnimations>
+
+  
+
+  <Map name="default">
+
+    <!-- all block needs to be defined -->
+    <all>
+      <colorGroup type="default">
+        <color r="0" g="0" b="0" />
+      </colorGroup>
+      <colorGroup type="onRelease" join="add" boardAnimation="testBoard" >
+        <animation name="releaseAnimation"/>
+      </colorGroup>
+    </all>
+
+  </Map>
+
+</Theme>
+

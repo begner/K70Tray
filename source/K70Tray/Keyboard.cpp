@@ -5,6 +5,7 @@ using namespace std;
 
 extern string				g_keyNames[K70_KEY_MAX];
 extern unsigned char		g_keyCodes[K70_KEY_MAX];
+extern float				g_keySizes[K70_KEY_MAX];
 
 
 Keyboard::Keyboard()
@@ -38,18 +39,16 @@ bool Keyboard::KeynameExist(string keyName) {
 	return (keyCode != -1);
 }
 
-
-
 void Keyboard::KeyDown(unsigned int keycode) {
 	// printf("Keyboard::KeyDown %X\n", keycode);
-	pressedKeys.push_back(keycode);
+	pressedKeys.push_back(getNameByCode(keycode));
 	RemoveDuplicatedOnPressedKeys();
 	return;
 }
 
 void Keyboard::KeyUp(unsigned int keycode) {
 	// printf("Keyboard::KeyUp %X\n", keycode);
-	pressedKeys.erase(remove(pressedKeys.begin(), pressedKeys.end(), keycode), pressedKeys.end());
+	pressedKeys.erase(remove(pressedKeys.begin(), pressedKeys.end(), getNameByCode(keycode)), pressedKeys.end());
 	RemoveDuplicatedOnPressedKeys();
 	return;
 }
@@ -86,6 +85,19 @@ int Keyboard::getCodeByName(string keyname) {
 	return ret;
 }
 
-vector<unsigned int> Keyboard::getAllPressedKeys() {
+float Keyboard::getSizeByCode(unsigned int keycode) {
+	float ret = 0;
+	for (unsigned int i = 0; i < K70_KEY_MAX; i++) {
+		if (g_keyCodes[i] == keycode) {
+			ret = g_keySizes[i];
+		}
+	}
+	return ret;
+}
+
+
+
+
+vector<string> Keyboard::getAllPressedKeys() {
 	return pressedKeys;
 }

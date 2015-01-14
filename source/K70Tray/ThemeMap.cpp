@@ -5,7 +5,7 @@
 
 using namespace std;
 
-extern RGB					ledState[K70_ROWS][K70_COLS];
+extern K70RGB					ledState[K70_ROWS][K70_COLS];
 extern LightControl			* pLC;
 extern string				g_keyNames[K70_KEY_MAX];
 extern unsigned char		g_keyCodes[K70_KEY_MAX];
@@ -190,11 +190,11 @@ void ThemeMap::RemoveSync(string keyName, string type) {
 * if keyname == "" - means all!
 * type needs to be 'default' or 'onPress'
 */
-void ThemeMap::AddColorToKeyMap(string keyName, string type, RGB color, unsigned int duration) {
+void ThemeMap::AddColorToKeyMap(string keyName, string type, K70RGB color, unsigned int duration) {
 
 	if (keyName != string("")) {
 		unsigned int keyCode = parentTheme->getKeyboard()->getCodeByName(keyName);
-		// printf("Map Key: '%s' (%i) / '%s' -> %s\n", keyName.c_str(), keyCode, type.c_str(), color.getRGBString().c_str());
+		// printf("Map Key: '%s' (%i) / '%s' -> %s\n", keyName.c_str(), keyCode, type.c_str(), color.getK70RGBString().c_str());
 		keyColorMap[keyCode].addColor(type, color, duration);
 	}
 	else {
@@ -235,8 +235,17 @@ void ThemeMap::Activate() {
 	DebugMsg("Activate Map '%s'\n", getName().c_str());
 }
 
-void ThemeMap::Tick() {
+bool ThemeMap::IsTickRunning() {
+	/*
+	if (tickIsRunning) {
+		DebugMsg("Skipped Tick!");
+	}
+	*/
+	return tickIsRunning;
+}
 
+void ThemeMap::Tick() {
+	tickIsRunning = true;
 	// printf("keyColorMap size %i \n", keyColorMap.size());
 	for (map <unsigned int, KeyColor>::iterator it = keyColorMap.begin(); it != keyColorMap.end(); ++it) {
 		unsigned int keyCode = it->first;
@@ -251,12 +260,12 @@ void ThemeMap::Tick() {
 			kc->Tick();
 		}
 
-		RGB curColor = kc->getColor();
+		K70RGB curColor = kc->getColor();
 
 		int px = pLC->getXYByKeyCode(keyCode, string("x"));
 		int py = pLC->getXYByKeyCode(keyCode, string("y"));
 
-		// printf("Set Led on %ix%i of Key 0x%X to %s'\n", px, py, keyCode, curColor.getRGBString().c_str());
+		// printf("Set Led on %ix%i of Key 0x%X to %s'\n", px, py, keyCode, curColor.getK70RGBString().c_str());
 		ledState[px][py].setR(curColor.getR());
 		ledState[px][py].setG(curColor.getG());
 		ledState[px][py].setB(curColor.getB());
@@ -272,9 +281,16 @@ void ThemeMap::Tick() {
 			if (baor != string("")) {
 				// DebugMsg("Board Animation size %i", BoardAnimationMap.find(baor)->second.getAnimationSize());
 				
-				BoardAnimation newBA = BoardAnimationMap.find(baor)->second;
-				newBA.startAt(px, py);
-				activeBoardAnimations.push_back(newBA);
+				map <string, BoardAnimation>::iterator newBAIt = BoardAnimationMap.find(baor);
+				if (newBAIt != BoardAnimationMap.end()) {
+					BoardAnimation newBA = newBAIt->second;
+					newBA.startAt(px, py);
+					activeBoardAnimations.push_back(newBA);
+				}
+				else {
+					DebugMsg("Board Animation '%s' not found!", baor.c_str());
+				}
+				
 			}
 			
 		}
@@ -282,33 +298,44 @@ void ThemeMap::Tick() {
 			string baop = kc->getBoardAnimationNameOnPress();
 			// DebugMsg("getJustPressed: Board Animation '%s'", baop.c_str());
 			if (baop != string("")) {
-				BoardAnimation newBA = BoardAnimationMap.find(baop)->second;
-				newBA.startAt(px, py);
-				activeBoardAnimations.push_back(newBA);
+
+				map <string, BoardAnimation>::iterator newBAIt = BoardAnimationMap.find(baop);
+				if (newBAIt != BoardAnimationMap.end()) {
+					BoardAnimation newBA = newBAIt->second;
+					newBA.startAt(px, py);
+					activeBoardAnimations.push_back(newBA);
+				}
+				else {
+					DebugMsg("Board Animation '%s' not found!", baop.c_str());
+				}
 			}
 		}
 		
 	}
 	
 	
-	vector<BoardAnimation>::iterator it = activeBoardAnimations.begin();
-	while (it != activeBoardAnimations.end())
-	{
-		// execute activeBoardAnimations
-		it->tick();
-	
-		// delete finished BoardAnimations
-		if (it->animationEnded()) 
+	if (activeBoardAnimations.size() > 0) {
+		vector<BoardAnimation>::iterator it = activeBoardAnimations.begin();
+		while (it != activeBoardAnimations.end())
 		{
-			it = activeBoardAnimations.erase(it);
+			// execute activeBoardAnimations
+			it->tick();
+
+			// delete finished BoardAnimations
+			if (it->animationEnded())
+			{
+				DebugMsg("Animation ended!");
+				it = activeBoardAnimations.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+
 		}
-		else
-		{
-			++it;
-		}
-		
 	}
 	
+	tickIsRunning = false;
 
 
 

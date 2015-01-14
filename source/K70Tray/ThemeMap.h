@@ -2,7 +2,7 @@
 #define THEMEMAP_H
 
 #include "Constants.h"
-#include "RGB.h"
+#include "K70RGB.h"
 #include "Globals.h"
 #include "KeyColor.h"
 #include "BoardAnimation.h"
@@ -22,15 +22,16 @@ class Theme;
 class ThemeMap
 {
 private:
+	bool				tickIsRunning = false;
 	Theme*				parentTheme;
-	RGB					baseColor;
-	RGB					onPressColor;
+	K70RGB					baseColor;
+	K70RGB					onPressColor;
 	bool				onPressColorSet;
 	string				myMapName;
 	// vector<string>		defaultKeyNames;
-	// vector<RGB>			defaultKeyColors;
+	// vector<K70RGB>			defaultKeyColors;
 	// vector<string>		onPressKeyNames;
-	// vector<RGB>			onPressKeyColors;
+	// vector<K70RGB>			onPressKeyColors;
 	map <unsigned int, KeyColor> keyColorMap; 
 	vector<BoardAnimation>	activeBoardAnimations;
 	map <string, BoardAnimation> BoardAnimationMap;
@@ -40,12 +41,12 @@ public:
 	~ThemeMap();
 	void KeyDown(unsigned int keycode);
 	void KeyUp(unsigned int keycode);
-	// void SetBaseColor(RGB baseColor);
-	// void SetOnPressColor(RGB color);
-	// RGB GetOnPressColor();
-	// void AddKeyColorDefault(string keyName, RGB keyColor);
-	// void AddKeyColorKeyPress(string key, RGB color);
-	void AddColorToKeyMap(string keyName, string type, RGB color, unsigned int duration);
+	// void SetBaseColor(K70RGB baseColor);
+	// void SetOnPressColor(K70RGB color);
+	// K70RGB GetOnPressColor();
+	// void AddKeyColorDefault(string keyName, K70RGB keyColor);
+	// void AddKeyColorKeyPress(string key, K70RGB color);
+	void AddColorToKeyMap(string keyName, string type, K70RGB color, unsigned int duration);
 	void ClearKeyMapColors(string keyName, string type);
 	void SetSyncNameToKeyMap(string keyName, string type, string syncName);
 	void SetJoinMode(string keyName, string type, string joinMode);
@@ -60,6 +61,7 @@ public:
 	Theme* getTheme();
 	void Tick();
 	void addBoardAnimation(BoardAnimation ba);
+	bool IsTickRunning();
 };
 
 #endif

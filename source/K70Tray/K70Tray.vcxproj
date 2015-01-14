@@ -23,6 +23,7 @@
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>false</CLRSupport>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -56,6 +57,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <CompileAsManaged>false</CompileAsManaged>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -72,6 +74,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <CompileAsManaged>false</CompileAsManaged>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -91,12 +94,13 @@
     <ClInclude Include="K70Tray.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="KeyboardDevice.h" />
+    <ClInclude Include="KeyboardPreview.h" />
     <ClInclude Include="KeyColor.h" />
     <ClInclude Include="LightControl.h" />
     <ClInclude Include="MainCorsairRGBK.h" />
     <ClInclude Include="ProcessList.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="RGB.h" />
+    <ClInclude Include="K70RGB.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Theme.h" />
@@ -109,11 +113,12 @@
     <ClCompile Include="K70Tray.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="KeyboardDevice.cpp" />
+    <ClCompile Include="KeyboardPreview.cpp" />
     <ClCompile Include="KeyColor.cpp" />
     <ClCompile Include="LightControl.cpp" />
     <ClCompile Include="MainCorsairRGBK.cpp" />
     <ClCompile Include="ProcessList.cpp" />
-    <ClCompile Include="RGB.cpp" />
+    <ClCompile Include="K70RGB.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -128,24 +133,27 @@
   <ItemGroup>
     <Image Include="..\res\bitmap1.bmp" />
     <Image Include="..\Res\icon.png" />
-    <Image Include="..\res\icon1.ico" />
     <Image Include="..\Res\keyboard.ico" />
     <Image Include="..\Res\mainBackground.bmp" />
     <Image Include="K70Tray.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="config.xml" />
-    <Xml Include="Layout.german.xml" />
+    <Xml Include="config.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="Layout.K70.German.xml" />
     <Xml Include="Theme.Dev.xml">
       <SubType>Designer</SubType>
     </Xml>
+    <Xml Include="Theme.Lol.xml" />
     <Xml Include="Theme.modifierLight.xml">
       <SubType>Designer</SubType>
     </Xml>
     <Xml Include="Theme.Rainbow.xml">
       <SubType>Designer</SubType>
     </Xml>
+    <Xml Include="Theme.whiteNeutral.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -42,10 +42,40 @@
       <color r="5" g="0" b="5" duration="5" />
       <color r="6" g="0" b="6" duration="5" />
     </animation>
+    <animation name="redFlash">
+      <color r="7" g="7" b="7" duration="2" />
+      <color r="7" g="5" b="5" duration="1" />
+      <color r="7" g="0" b="0" duration="10" />
+      <color r="7" g="3" b="3" duration="1" />
+    </animation>
+    
+    
   </sharedAnimations>
 
+  <KeyGroups>
+    <group name="NumBlockKeys">
+      <key name="Num1" />
+      <key name="Num2" />
+      <key name="Num3" />
+      <key name="Num4" />
+      <key name="Num5" />
+      <key name="Num6" />
+      <key name="Num7" />
+      <key name="Num8" />
+      <key name="Num9" />
+      <key name="Num0" />
+      <key name="Num," />
+      <key name="NumEnter" />
+      <key name="Num+" />
+      <key name="Num-" />
+      <key name="Num/" />
+      <key name="Num*" />
+      <key name="NumLock" />
+    </group>
+  </KeyGroups>
 
-  <Map name="default">
+
+    <Map name="default">
     <all>
       <colorGroup type="default" syncName="default/default" syncTo="default/default">
           <animation name="redblink"/>
@@ -121,6 +151,22 @@
         <key keyname="AltGr" />
         <key keyname="RCtrl" />
       </group>
+      <group>
+        <key keyname="LAlt" />
+        <key keyname="LCtrl" />
+      </group>
+      <group>
+        <key keyname="AltGr" />
+        <key keyname="LCtrl" />
+      </group>
+      <group>
+        <key keyname="LAlt" />
+        <key keyname="RCtrl" />
+      </group>
+      <group>
+        <key keyname="AltGr" />
+        <key keyname="RCtrl" />
+      </group>
     </activateOnKey>
     <all>
       <colorGroup type="default" syncTo="default/default">
@@ -128,4 +174,88 @@
       </colorGroup>
     </all>
   </Map>
+
+
+  
+  <Map name="CapslockOn">
+    <activateOnKey>
+      <group>
+        <key keyname="CapsLockActivated" /> <!-- Note: This is a Special Key Event! -->
+      </group>
+    </activateOnKey>
+    <all>
+      <colorGroup type="default" syncTo="default/default">
+        <animation name="redFlash" />
+      </colorGroup>
+    </all>
+  </Map>
+
+
+
+  <Map name="NumLockOn">
+    <activateOnKey>
+      <group>
+        <key keyname="NumLockActivated" /> <!-- Note: This is a Special Key Event! -->
+      </group>
+    </activateOnKey>
+    <all>
+      <colorGroup type="default">
+        <animation name="redblink"/>
+      </colorGroup>
+    </all>
+    <KeyGroup name="NumBlockKeys">
+      <colorGroup type="default">
+        <color r="7" g="7" b="7"/>
+      </colorGroup>
+    </KeyGroup>
+    
+  </Map>
+
+
+  <Map name="CapsLockAndNumLockOn">
+    <activateOnKey>
+      <group>
+        <key keyname="NumLockActivated" /> <!-- Note: This is a Special Key Event! -->
+        <key keyname="CapsLockActivated" /> <!-- Note: This is a Special Key Event! -->
+      </group>
+    </activateOnKey>
+    <all>
+      <colorGroup type="default">
+          <animation name="redFlash" />
+      </colorGroup>
+    </all>
+    <KeyGroup name="NumBlockKeys">
+      <colorGroup type="default">
+        <color r="7" g="7" b="7"/>
+      </colorGroup>
+    </KeyGroup>
+
+  </Map>
+
+
+  <Map name="NumLockOnCtrl">
+    <activateOnKey>
+      <group>
+        <key keyname="NumLockActivated" /> <!-- Note: This is a Special Key Event! -->
+        <key keyname="LCtrl" />
+      </group>
+      <group>
+        <key keyname="NumLockActivated" /> <!-- Note: This is a Special Key Event! -->
+        <key keyname="RCtrl" />
+      </group>
+    </activateOnKey>
+    
+    <all>
+      <colorGroup type="default" syncTo="default/default">
+        <animation name="yellowblink" />
+      </colorGroup>
+    </all>
+    <KeyGroup name="NumBlockKeys">
+      <colorGroup type="default">
+        <color r="7" g="7" b="7"/>
+      </colorGroup>
+    </KeyGroup>
+
+  </Map>
+  
 </Theme>

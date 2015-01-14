@@ -20,8 +20,7 @@ extern string				g_keyNames[K70_KEY_MAX];
 extern int					g_iInterval;
 extern KeyboardDevice		* keyBoardDevice;
 extern Theme				* currentTheme;
-
-
+extern HWND					ghDlgMain;
 
 K70XMLConfig::K70XMLConfig(MainCorsairRGBK * mainRef)
 {
@@ -55,6 +54,14 @@ bool K70XMLConfig::readConfig()
 		const char * tn = handle.FirstChild("Config").FirstChild("Theme").ToElement()->GetText();
 		DebugMsg("themeName: %s", tn);
 		themeName = tn;
+
+		const int openWindowOnStartup = atoi(handle.FirstChild("Config").FirstChild("openMainDlg").ToElement()->GetText());
+		DebugMsg("openMainDlg: %i", openWindowOnStartup);
+		if (openWindowOnStartup > 0) {
+			DebugMsg(" - ShowWindow!");
+			ShowWindow(ghDlgMain, SW_SHOW);
+		}
+		
 
 		// parseLayout(layoutName);
 
@@ -178,7 +185,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 	themeFileName = string("Theme.") + string(themeName) + ".xml";
 	DebugMsg("themeFileName: %s", themeFileName.c_str());
 
-	map <string, vector<RGB>> sharedAnimationMap;
+	map <string, vector<K70RGB>> sharedAnimationMap;
 	map <string, vector<string>> sharedKeyGroupMap;
 	map <string, BoardAnimation> sharedBoardAnimationMap;
 
@@ -196,14 +203,14 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 				
 				string sharedAnimationName = string(animationNode->Attribute("name"));
 				
-				unsigned int duration = 0;
-				vector<RGB> animation;
+				unsigned int completeDuration = 0;
+				vector<K70RGB> animation;
 				for (TiXmlElement* colorNode = animationNode->FirstChildElement("color"); colorNode != NULL; colorNode = colorNode->NextSiblingElement("color")) {
-					RGB color;
+					K70RGB color;
 					color.setR(atoi(colorNode->Attribute("r")));
 					color.setG(atoi(colorNode->Attribute("g")));
 					color.setB(atoi(colorNode->Attribute("b")));
-					
+					unsigned int duration = 0;
 					if (colorNode->Attribute("duration")) {
 						duration = atoi(colorNode->Attribute("duration"));
 					}
@@ -214,8 +221,9 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 					for (unsigned int i = 0; i < duration; i++) {
 						animation.push_back(color);
 					}
+					completeDuration += duration;
 				}
-				DebugMsg("Loaded SharedAnimation: '%s', duration: %i", sharedAnimationName.c_str(), duration);
+				DebugMsg("Loaded SharedAnimation: '%s', duration: %i", sharedAnimationName.c_str(), completeDuration);
 				sharedAnimationMap.insert(make_pair(sharedAnimationName, animation));
 			}
 		}
@@ -275,7 +283,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 					
 					int posX = atoi(baANode->Attribute("x"));
 					int posY = atoi(baANode->Attribute("y"))*-1;
-					vector<RGB>  myColors;
+					vector<K70RGB>  myColors;
 
 					int start = 0;
 					if (baANode->Attribute("start")) {
@@ -284,7 +292,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 
 
 					for (int i = 0; i < start; i++) {
-						RGB color;
+						K70RGB color;
 						color.setR(0);
 						color.setG(0);
 						color.setB(0);
@@ -298,7 +306,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 							continue;
 						}
 
-						vector<RGB> myAnimation = sharedAnimationMap.find(animationName)->second;
+						vector<K70RGB> myAnimation = sharedAnimationMap.find(animationName)->second;
 						for (unsigned int i = 0; i < myAnimation.size(); i++) {
 							myColors.push_back(myAnimation[i]);
 						}
@@ -306,7 +314,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 
 					
 					for (TiXmlElement* baAColorNode = baANode->FirstChildElement("color"); baAColorNode != NULL; baAColorNode = baAColorNode->NextSiblingElement("color")) {
-						RGB color;
+						K70RGB color;
 						color.setR(atoi(baAColorNode->Attribute("r")));
 						color.setG(atoi(baAColorNode->Attribute("g")));
 						color.setB(atoi(baAColorNode->Attribute("b")));
@@ -371,10 +379,11 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 						}
 						activateOnKeyPresent = true;
 						currentTheme->AddKeySwitchGroup(mapname, groupId++, keysOfGroup);
+						DebugMsg("keysOfGroup size: %i", keysOfGroup.size());
+						
 					}
+				} // tagName == string("activateOnKey"
 
-					// currentTheme->AddSwitchMapOnKey(string(mapConfigNode->Attribute("keyname")), mapname);
-				}
 				else { // (tagName == string("key") || tagName == string("all") || tagName == string("KeyGroup")) {
 
 					// create a temp keyGroup, if we need one...
@@ -459,7 +468,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 								string colorNodeTagName = string(colorNode->Value());
 
 								if (colorNodeTagName == string("color")) {
-									RGB color;
+									K70RGB color;
 									color.setR(atoi(colorNode->Attribute("r")));
 									color.setG(atoi(colorNode->Attribute("g")));
 									color.setB(atoi(colorNode->Attribute("b")));
@@ -476,7 +485,7 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 									myMap.AddColorToKeyMap(keyName, type, color, duration);
 								}
 								else if (colorNodeTagName == string("animation")) {
-									vector<RGB> myAnimation;
+									vector<K70RGB> myAnimation;
 									if (!colorNode->Attribute("name")) {
 										DebugMsg(" - WARNING: Attribute 'name' is missing for animation!");
 										continue;

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="XMLFiles">
+      <UniqueIdentifier>{054d9b79-52f2-46fe-9fbe-a42688da588a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -45,9 +48,6 @@
     <ClInclude Include="KeyColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RGB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Theme.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -72,6 +72,12 @@
     <ClInclude Include="BoardAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="K70RGB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardPreview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -90,9 +96,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KeyColor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RGB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Theme.cpp">
@@ -114,6 +117,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BoardAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="K70RGB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardPreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -138,18 +147,31 @@
     <Image Include="..\res\bitmap1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="..\res\icon1.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="..\Res\icon.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="config.xml" />
-    <Xml Include="Layout.german.xml" />
-    <Xml Include="Theme.Dev.xml" />
-    <Xml Include="Theme.modifierLight.xml" />
-    <Xml Include="Theme.Rainbow.xml" />
+    <Xml Include="config.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Theme.Dev.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Theme.modifierLight.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Theme.Rainbow.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Theme.whiteNeutral.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Layout.K70.German.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Theme.Lol.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

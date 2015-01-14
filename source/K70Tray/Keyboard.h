@@ -15,18 +15,19 @@ class Keyboard
 {
 
 private:
-	vector<unsigned int>		pressedKeys;
+	vector<string>		pressedKeys;
 	void RemoveDuplicatedOnPressedKeys();
 public:
 	Keyboard();
 	void KeyDown(unsigned int keycode);
 	void KeyUp(unsigned int keycode);
-	vector<unsigned int> Keyboard::getAllPressedKeys();
+	vector<string> Keyboard::getAllPressedKeys();
 	int getCodeByName(string keyname);
 	string getNameByCode(unsigned int keycode);
 	vector <string> GetAllKeyNames();
 	vector <unsigned int> GetAllKeyCodes();
 	bool KeynameExist(string keyName);
+	float getSizeByCode(unsigned int keycode);
 };
 
 #endif

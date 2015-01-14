@@ -23,7 +23,7 @@ int LightControl::getLedAdressByKeyCode(unsigned char keycode) {
 int LightControl::getXYByKeyCode(unsigned char keycode, string position) {
 	int ret = 1;
 
-	for (int y = K70_COLS; y--> 0;) // Y 0 = CTRL, Windowskey, Alt, space...
+	for (int y = 0; y < K70_COLS; y++) // Y 7 = CTRL, Windowskey, Alt, space...
 	{
 		for (int x = 0; x < K70_ROWS; x++)
 		{
@@ -51,7 +51,7 @@ void LightControl::BuildMatrix()
 	auto sizes = g_keySizes;
 
 	//for (int y = 0; y < 7; y++) // Y 0 = Brightness key, winlock & mute
-	for (int y = K70_COLS; y--> 0;) // Y 0 = CTRL, Windowskey, Alt, space...
+	for (int y = 0; y < K70_COLS; y++) // Y 0 = CTRL, Windowskey, Alt, space...
 	{
 		unsigned char key;
 		int size = 0;
@@ -93,7 +93,7 @@ void LightControl::BuildMatrixVK()
 	auto sizes = g_keySizes;
 
 	//for (int y = 0; y < 7; y++) // Y 1 = F1, F2... 
-	for (int y = K70_COLS; y--> 0;) // Y 1 = CTRL, Windowskey, Alt, space...
+	for (int y = 0; y < K70_COLS; y++) // Y 1 = CTRL, Windowskey, Alt, space...
 	{
 		unsigned char key;
 		int size = 0;
@@ -126,9 +126,11 @@ void LightControl::BuildMatrixVK()
 		if (*keys++ != 255 || *sizes++ != 0)
 			return;
 	}
+	
+
 }
 
-int LightControl::SetLedRGB(int led, int r, int g, int b)
+int LightControl::SetLedK70RGB(int led, int r, int g, int b)
 {
 	/*if (x < 0)
 	x = 0;
@@ -170,7 +172,7 @@ int LightControl::SetLedRGB(int led, int r, int g, int b)
 }
 
 
-int LightControl::SetXYRGB(int x, int y, int r, int g, int b)
+int LightControl::SetXYK70RGB(int x, int y, int r, int g, int b)
 {
 	if (x < 0)
 	x = 0;
@@ -185,5 +187,5 @@ int LightControl::SetXYRGB(int x, int y, int r, int g, int b)
 	// Converts Y & X to led number
 	int led = g_XY[y][x];
 
-	return SetLedRGB(led, r, g, b);
+	return SetLedK70RGB(led, r, g, b);
 }

@@ -1,7 +1,7 @@
 #ifndef THEME_H
 #define THEME_H
 
-#include "RGB.h"
+#include "K70RGB.h"
 #include "Keyboard.h"
 #include <stdlib.h>
 #include <string>
@@ -24,20 +24,25 @@ class Theme
 {
 	
 private: 
+	string											name;
 	Keyboard										kb;
 	ThemeMap *										activeMap = NULL;
 	vector<ThemeMap>								allMaps;
-	unordered_map< string, vector<unsigned int> >	keySwitchGroups; // map+groupid, vector of keycodes
-	void											SwitchMapOnKeyChange();
+	unordered_map< string, vector<string> >			keySwitchGroups; // map+groupid, vector of keycodes
+	bool											SwitchMapOnKeyChange();
+	bool											SwitchMapOnKeyChange(bool withSpecialKeys); // dont call directly! use SwitchMapOnKeyChange()
 	vector<unsigned int>							getSwitchMapInvoledKeys();
 	map <string, unsigned int> syncGroups;
 	map <string, unsigned int> syncGroupTick;
 	
 	void TickSyncGroups();
-
+	// string capsLockMapName = "";
+	// string numLockMapName = "";
 public:
 
 	Theme();
+	void setName(string name);
+	string getName();
 	~Theme();
 	void KeyDown(unsigned int keycode);
 	void KeyUp(unsigned int keycode);
@@ -52,7 +57,9 @@ public:
 	void Tick();
 	void AddSyncGroup(string name, unsigned int duration);
 	unsigned int getSyncGroupTick(string syncName);
-	
+	void StartTheme();
+	// void setCapsLockMapName(string mapName);
+	// void setNumLockMapName(string mapName);
 };
 
 #endif

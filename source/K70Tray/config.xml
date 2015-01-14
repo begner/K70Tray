@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config>
-  <Layout>german</Layout>
-  <Theme>Rainbow</Theme>
+  <Layout>K70.German</Layout>
+  <Theme>LoL</Theme>
   <UpdateInterval>30</UpdateInterval>
+  <openMainDlg>1</openMainDlg>
 </Config>

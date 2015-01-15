@@ -44,6 +44,10 @@ int K70XMLConfig::getLastWindowPosition(string pos) {
 	}
 }
 
+void K70XMLConfig::setLastWindowPosition(int posX, int posY) {
+	windowPositionLeft = posX;
+	windowPositionTop = posY;
+}
 
 
 
@@ -645,28 +649,16 @@ void K70XMLConfig::saveConfig() {
 
 	if (doc.LoadFile())
 	{
-		
-		
-		
 		saveConfigValue(&doc, "Layout", getLayoutName());
 		saveConfigValue(&doc, "Theme", getThemeName());
 
-		if (IsWindowVisible(ghDlgMain)) {
-			RECT Rect;
-			GetWindowRect(ghDlgMain, &Rect);
-			saveConfigValue(&doc, "WindowPositionTop", to_string(Rect.top));
-			saveConfigValue(&doc, "WindowPositionLeft", to_string(Rect.left));
+		if (windowPositionLeft > -1 && windowPositionTop > -1) {
+			saveConfigValue(&doc, "WindowPositionTop", to_string(windowPositionTop));
+			saveConfigValue(&doc, "WindowPositionLeft", to_string(windowPositionLeft));
 		}
-		
-
 	}
 
-
-
-
-
 	doc.SaveFile("config.xml");
-	
 }
 
 

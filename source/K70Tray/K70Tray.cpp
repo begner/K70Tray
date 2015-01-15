@@ -603,7 +603,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DialogBox(ghInst, MAKEINTRESOURCE(IDD_ABOUTBOX), ghWnd, About);
 			break;
 		case IDM_EXIT:
-			mainCorsairK70RGBK->quitApp(); // save config
+			mainCorsairK70RGBK->saveConfig(); // save config
 			DestroyWindow(hWnd);
 			break;
 		default:
@@ -665,7 +665,6 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 void ApplicationEndCleanup() {
-	mainCorsairK70RGBK->quitApp();
 	Shell_NotifyIcon(NIM_DELETE, &niData);
 	PostQuitMessage(0);
 }
@@ -719,13 +718,22 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		*/
 	case WM_SHOWWINDOW: 
 	{
-		int winPosX = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("x");
-		int winPosY = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("y");
-		RECT Rect;
-		GetWindowRect(ghDlgMain, &Rect);
-		int winWidth = Rect.right - Rect.left;
-		int winHeight = Rect.bottom - Rect.top;
-		MoveWindow(ghDlgMain, winPosX, winPosY, winWidth, winHeight, FALSE);
+		if (wParam) { // only on open!
+			int winPosX = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("x");
+			int winPosY = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("y");
+			if (winPosX > -1 && winPosY > -1) {
+				RECT Rect;
+				GetWindowRect(ghDlgMain, &Rect);
+				int winWidth = Rect.right - Rect.left;
+				int winHeight = Rect.bottom - Rect.top;
+				MoveWindow(ghDlgMain, winPosX, winPosY, winWidth, winHeight, FALSE);
+			}
+		}
+		else {
+			RECT Rect;
+			GetWindowRect(ghDlgMain, &Rect);
+			mainCorsairK70RGBK->getConfig()->setLastWindowPosition(Rect.top, Rect.left);
+		}
 
 	}
 	break;

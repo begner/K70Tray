@@ -297,7 +297,7 @@ void MainCorsairRGBK::ChangeLayout(string layoutName) {
 
 }
 
-void MainCorsairRGBK::quitApp() {
+void MainCorsairRGBK::saveConfig() {
 	config->saveConfig();
 }
 

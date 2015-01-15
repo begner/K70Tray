@@ -34,6 +34,6 @@ public:
 	void ChangeTheme(string themeName);
 	void ChangeLayout(string layoutName);
 	void PaintKeyboardState();
-	void quitApp();
+	void saveConfig();
 };
 

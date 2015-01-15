@@ -34,14 +34,15 @@ public:
 	bool parseLayout(const char *);
 	void parseTheme(const char *);
 	void saveConfig();
-	int K70XMLConfig::getLastWindowPosition(string pos);
+	int getLastWindowPosition(string pos);
+	void setLastWindowPosition(int posX, int posY);
 private:
 	string layoutName = "";
 	string themeName = "";
 	void initLayout();
 	void saveConfigValue(TiXmlDocument * doc, string tagName, string content);
-	int windowPositionTop = 0;
-	int windowPositionLeft = 0;
+	int windowPositionTop = -1;
+	int windowPositionLeft = -1;
 
 
 };

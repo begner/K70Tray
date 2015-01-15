@@ -31,12 +31,17 @@ public:
 	bool readTheme();
 	string getLayoutName();
 	string getThemeName();
-	void parseLayout(const char *);
+	bool parseLayout(const char *);
 	void parseTheme(const char *);
+	void saveConfig();
+	int K70XMLConfig::getLastWindowPosition(string pos);
 private:
 	string layoutName = "";
 	string themeName = "";
-		
+	void initLayout();
+	void saveConfigValue(TiXmlDocument * doc, string tagName, string content);
+	int windowPositionTop = 0;
+	int windowPositionLeft = 0;
 
 
 };

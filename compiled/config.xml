@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Config>
-  <Layout>K70.German</Layout>
-  <Theme>Rainbow</Theme>
-  <UpdateInterval>30</UpdateInterval>
-  <openMainDlg>0</openMainDlg>
+    <Layout>K70.German</Layout>
+    <Theme>Rainbow</Theme>
+    <UpdateInterval>30</UpdateInterval>
+    <openMainDlg>0</openMainDlg>
+    <WindowPositionTop>282</WindowPositionTop>
+    <WindowPositionLeft>1752</WindowPositionLeft>
 </Config>

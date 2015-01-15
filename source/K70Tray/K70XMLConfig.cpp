@@ -13,7 +13,7 @@
 using namespace std;
 
 extern unsigned char		g_ledAdress[K70_KEY_MAX];
-extern unsigned char		g_XYk[K70_COLS][K70_ROWS];
+extern unsigned char		g_XYk[K70_ROWS][K70_COLS];
 extern unsigned char		g_keyCodes[K70_KEY_MAX];
 extern float				g_keySizes[K70_KEY_MAX];
 extern string				g_keyNames[K70_KEY_MAX];
@@ -35,6 +35,17 @@ string K70XMLConfig::getThemeName() {
 	return themeName;
 }
 
+int K70XMLConfig::getLastWindowPosition(string pos) {
+	if (pos == string("x")) {
+		return windowPositionLeft;
+	}
+	else {
+		return windowPositionTop;
+	}
+}
+
+
+
 
 
 bool K70XMLConfig::readConfig()
@@ -55,6 +66,16 @@ bool K70XMLConfig::readConfig()
 		DebugMsg("themeName: %s", tn);
 		themeName = tn;
 
+
+		// first find position
+		if (handle.FirstChild("Config").FirstChild("WindowPositionTop").ToElement()) {
+			windowPositionTop = atoi(handle.FirstChild("Config").FirstChild("WindowPositionTop").ToElement()->GetText());
+		}
+		if (handle.FirstChild("Config").FirstChild("WindowPositionLeft").ToElement()) {
+			windowPositionLeft = atoi(handle.FirstChild("Config").FirstChild("WindowPositionLeft").ToElement()->GetText());
+		}
+
+		// ... then open instant - if we need to :)
 		const int openWindowOnStartup = atoi(handle.FirstChild("Config").FirstChild("openMainDlg").ToElement()->GetText());
 		DebugMsg("openMainDlg: %i", openWindowOnStartup);
 		if (openWindowOnStartup > 0) {
@@ -62,6 +83,7 @@ bool K70XMLConfig::readConfig()
 			ShowWindow(ghDlgMain, SW_SHOW);
 		}
 		
+
 
 		// parseLayout(layoutName);
 
@@ -97,29 +119,69 @@ bool K70XMLConfig::readTheme()
 	return true;
 }
 
-void K70XMLConfig::parseLayout(const char * layoutName) {
+void K70XMLConfig::initLayout() {
+	
+	for (int i = 0; i < K70_KEY_MAX; i++) {
+		g_keyCodes[i] = 0;
+		g_keySizes[i] = 0.25;
+		g_ledAdress[i] = 0;
+		g_keyNames[i] = string("");
+	}
+
+}
+
+bool K70XMLConfig::parseLayout(const char * localLayoutName) {
+
+	initLayout();
+
+
 
 	int counter = 0;
 	int spaceCounter = 0;
 
 	DebugMsg("--------- LAYOUT ------------\n");
 
-	// fill g_keyCodes with keycodes
-	// fill g_keySizes with sizes
-	// fill g_ledAdress with led
-
 	string layoutFileName;
-	layoutFileName = string("Layout.") + string(layoutName) + ".xml";
+	layoutFileName = string("Layout.") + string(localLayoutName) + ".xml";
 	DebugMsg("layoutFileName: %s", layoutFileName.c_str());
+
+
+
 
 	TiXmlDocument doc(layoutFileName.c_str());
 	if (doc.LoadFile())
 	{
 		TiXmlHandle  handle(&doc);
 		TiXmlElement* root = handle.FirstChildElement("Layout").ToElement();
+
+		// get device
+		if (!root->Attribute("device")) {
+			DebugMsg("WARNING: Attribute 'device' missing in Layout Tag!");
+			return FALSE;
+		}
+
+		int neededKeysInRow = 0;
+		string deviceType = string(root->Attribute("device"));
+		if (deviceType == string("K70")) {
+			neededKeysInRow = REQUIRED_KEYROWSIZE_K70;
+		}
+		else if (deviceType == string("K95")) {
+			neededKeysInRow = REQUIRED_KEYROWSIZE_K95;
+		}
+		else {
+			DebugMsg("WARNING: Unknown 'device' = '%s'", deviceType.c_str());
+			return FALSE;
+		}
+
+
+
+
+		int currentRow = 0;
 		// iterate rows...
 		for (TiXmlElement* row = root->FirstChildElement("Row"); row != NULL; row = row->NextSiblingElement("Row"))
 		{
+			currentRow++;
+			float keysInRow = 0;
 			for (TiXmlElement* key = row->FirstChildElement(); key != NULL; key = key->NextSiblingElement())
 			{
 				string tagName = string(key->Value());
@@ -147,6 +209,7 @@ void K70XMLConfig::parseLayout(const char * layoutName) {
 					led = (unsigned char)ledInt;
 				}
 
+				keysInRow += keySize;
 				
 				
 				if (string(tagName) == string("Space")) {
@@ -165,24 +228,29 @@ void K70XMLConfig::parseLayout(const char * layoutName) {
 				
 			}
 
+			if (keysInRow != neededKeysInRow) {
+				DebugMsg("WARNING: Not enough keysize in row %i. Is %f - but needs to be %i", currentRow, keysInRow, neededKeysInRow);
+				return FALSE;
+			}
 			g_keyCodes[counter] = 255;
 			g_keySizes[counter + spaceCounter] = 0;
 			g_ledAdress[counter] = 255;
 			counter++;
 		}
-		
 	}
 	else {
 		DebugMsg("Layoutfile %s not found!", layoutFileName.c_str());
+		return FALSE;
 	}
-
+	layoutName = localLayoutName;
+	return TRUE;
 }
 
-void K70XMLConfig::parseTheme(const char * themeName) {
+void K70XMLConfig::parseTheme(const char * localThemeName) {
 	
 	
 	string themeFileName;
-	themeFileName = string("Theme.") + string(themeName) + ".xml";
+	themeFileName = string("Theme.") + string(localThemeName) + ".xml";
 	DebugMsg("themeFileName: %s", themeFileName.c_str());
 
 	map <string, vector<K70RGB>> sharedAnimationMap;
@@ -561,7 +629,69 @@ void K70XMLConfig::parseTheme(const char * themeName) {
 	else {
 		DebugMsg("ThemeFile %s not found!", themeFileName.c_str());
 	}
+
+	themeName = localThemeName;
 	currentTheme->GetMapByName(string("default"));
+	
+
+}
+
+
+
+void K70XMLConfig::saveConfig() {
+	
+	DebugMsg("--------- SAVE CONFIG ------------");
+	TiXmlDocument doc("config.xml");
+
+	if (doc.LoadFile())
+	{
+		
+		
+		
+		saveConfigValue(&doc, "Layout", getLayoutName());
+		saveConfigValue(&doc, "Theme", getThemeName());
+
+		if (IsWindowVisible(ghDlgMain)) {
+			RECT Rect;
+			GetWindowRect(ghDlgMain, &Rect);
+			saveConfigValue(&doc, "WindowPositionTop", to_string(Rect.top));
+			saveConfigValue(&doc, "WindowPositionLeft", to_string(Rect.left));
+		}
+		
+
+	}
+
+
+
+
+
+	doc.SaveFile("config.xml");
+	
+}
+
+
+void K70XMLConfig::saveConfigValue(TiXmlDocument * doc, string tagName, string content) {
+	TiXmlHandle handle(doc);
+
+	TiXmlHandle configRoot = handle.FirstChild("Config");
+	TiXmlElement * configRootElement = configRoot.ToElement();
+
+	// check if the config tag is there...
+	TiXmlElement * configElement = configRoot.FirstChild(tagName.c_str()).ToElement();
+	
+	// if not - go create one!
+	if (!configElement) {
+		TiXmlElement * element = new TiXmlElement(tagName.c_str());
+		TiXmlText *blankText = new TiXmlText(string("").c_str());
+		element->LinkEndChild(blankText);
+		configRootElement->LinkEndChild(element);
+		configElement = element;
+	}
+	
+	// not it is there!
+	TiXmlNode * configNode = configRoot.FirstChild(tagName.c_str()).FirstChild().ToNode();
+	// set value!
+	configNode->SetValue(content.c_str());
 	
 
 }

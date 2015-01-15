@@ -15,6 +15,8 @@
 #include <direct.h>
 #include <usb.h>
 #include <math.h>
+#include <iostream>
+#include <fstream>
 
 #define PACKVERSION(major,minor) MAKELONG(minor,major)
 #define MAX_LOADSTRING 100
@@ -68,8 +70,8 @@ Theme				* currentTheme; // Current Theme
 LightControl		* pLC; // Current Light Control
 
 
-unsigned char		g_XY[K70_COLS][K70_ROWS];	// XY Matrix of Led Numbers
-unsigned char		g_XYk[K70_COLS][K70_ROWS];	// XY Matrix of KeyCodes
+unsigned char		g_XY[K70_ROWS][K70_COLS];	// XY Matrix of Led Numbers
+unsigned char		g_XYk[K70_ROWS][K70_COLS];	// XY Matrix of KeyCodes
 unsigned char		g_ledAdress[K70_KEY_MAX];	// Led Adress for each Key
 unsigned char		g_keyCodes[K70_KEY_MAX];	// Key Codes for each Key
 float				g_keySizes[K70_KEY_MAX];	// Key Sizes Array
@@ -79,7 +81,7 @@ MainCorsairRGBK		* mainCorsairK70RGBK; // Main App
 KeyboardDevice		* keyBoardDevice; // Keyboard Device (Hardware stuff)
 unsigned char		g_LEDState[K70_KEY_MAX][3];
 unsigned char		g_PrevLEDState[144][3]; // Ledstates and Previous LedStates
-K70RGB				ledState[K70_ROWS][K70_COLS] = {};
+K70RGB				ledState[K70_COLS][K70_ROWS] = {};
 
 
 const int ID_TIMER = 1;
@@ -139,25 +141,37 @@ void DebugMsg(string msg, ...) {
 	vsprintf_s(buffer, msg.c_str(), args);
 	perror(buffer);
 	va_end(args);
-	string smsg = buffer;
+	string smsg = string(buffer);
 
-	/*
+	// create Timestamp
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	char bufferTime[2048] = { '\0' };
+	char bufferTime[80];
 
-	int hour = (INT)st.wHour;
-	int min = (INT)st.wMinute;
-	int sec = (INT)st.wSecond;
-
-	// buffer = smsg.c_str();
-	sprintf_s(bufferTime, sizeof(bufferTime), string("%d:%d:d% " + smsg).c_str(), hour, min, sec);
-	string smsgd = bufferTime;
-	*/
+	int myDay = (INT)st.wDay;
+	int myMonth = (INT)st.wMonth;
+	int myYear = (INT)st.wYear;
+	int myHour = (INT)st.wHour;
+	int myMin = (INT)st.wMinute;
+	int mySec = (INT)st.wSecond;
+	sprintf_s(bufferTime, 80, "%02d.%02d.%04d / %02d:%02d:%02d", myDay, myMonth, myYear, myHour, myMin, mySec);
+ 	string timeString = string(bufferTime);
 	
-	wstring wmsg = utf8_decode(smsg);
 
+	// concat message & time
+	smsg = timeString + string(" - ") + smsg;
+
+	// convert to wstring to wchar
+	wstring wmsg = utf8_decode(smsg);
 	WCHAR * newText = (WCHAR*)wmsg.c_str();
+
+
+	// write log
+	ofstream myfile;
+	myfile.open("log.txt", ios::app);
+	myfile << smsg;
+	myfile.close();
+
 	
 	// get edit control from dialog
 	HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_APPMESSAGES);
@@ -372,7 +386,7 @@ BOOL StartInstance() {
 		return (INT_PTR)FALSE;
 	}
 	else {
-		DebugMsg("Device found");
+		DebugMsg("Device found: '%s'", keyBoardDevice->getDeviceName().c_str());
 	}
 
 	// Create Animation Thread (Wich starts the app)
@@ -589,6 +603,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DialogBox(ghInst, MAKEINTRESOURCE(IDD_ABOUTBOX), ghWnd, About);
 			break;
 		case IDM_EXIT:
+			mainCorsairK70RGBK->quitApp(); // save config
 			DestroyWindow(hWnd);
 			break;
 		default:
@@ -650,6 +665,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 void ApplicationEndCleanup() {
+	mainCorsairK70RGBK->quitApp();
 	Shell_NotifyIcon(NIM_DELETE, &niData);
 	PostQuitMessage(0);
 }
@@ -701,8 +717,21 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 		*/
+	case WM_SHOWWINDOW: 
+	{
+		int winPosX = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("x");
+		int winPosY = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("y");
+		RECT Rect;
+		GetWindowRect(ghDlgMain, &Rect);
+		int winWidth = Rect.right - Rect.left;
+		int winHeight = Rect.bottom - Rect.top;
+		MoveWindow(ghDlgMain, winPosX, winPosY, winWidth, winHeight, FALSE);
+
+	}
+	break;
 	case WM_INITDIALOG:
-		// DebugMsg("INITDIALOG!");
+		// getLastWindowPosition(string pos)
+		DebugMsg("INITDIALOG!");
 		// SendMessage(GetDlgItem(ghDlgMain, IDC_APPMESSAGES), EM_SETLIMITTEXT, (WPARAM)0, (LPARAM)0);
 		return (INT_PTR)TRUE;
 		break;
@@ -827,6 +856,9 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_THEMESELECT);
 			int selectedThemeIndex = SendMessage(hwndOutput, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
 			mainCorsairK70RGBK->ChangeTheme(themeItems[selectedThemeIndex]);
+		}
+		else if (LOWORD(wParam) == IDC_OPENLOGFILE){
+			ShellExecute(0, 0, L"log.txt", 0, 0, SW_SHOW);
 		}
 		// Exit of Window (means hide)
 		else if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)

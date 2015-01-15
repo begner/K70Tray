@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Layout device="K70">
+
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+    <!-- THIS LAYOUT IS EXPERIMENTAL -->
+
+
+  <!-- Top Row: Only Multimediakey here -->
+  <Row>
+    <Space keysize="15" />
+    
+    <Space keysize="0.25" />
+    
+    <Key name="Light" code="0x89" led="137" keysize="1" /> <!-- Cant detect this key! PseudoCode for Code to get Unique Id-->
+    <Key name="WinLock" code="0x08" led="8" keysize="1" /> <!-- Cant detect this key! PseudoCode for Code to get Unique Id-->
+    <Space keysize="1" />
+    
+    <Space keysize="0.25" />
+    
+    <Space keysize="1" />
+    <Key name="Mute" code="0x14" led="20" keysize="1" />
+    <Space keysize="2" />
+
+    <Space keysize="0.5" />
+  </Row>
+
+
+  <!-- 1st row -->
+  <Row>
+    <Key name="Esc" code="0x0" led="0" keysize="1" />
+    <Space keysize="0.5" />
+    <Key name="F1" code="0x0C" led="12" keysize="1" />
+    <Key name="F2" code="0x18" led="24" keysize="1" />
+    <Key name="F3" code="0x24" led="36" keysize="1" />
+    <Key name="F4" code="0x30" led="48" keysize="1" />
+    <Space keysize="0.75" />
+    <Key name="F5" code="0x3C" led="60" keysize="1" />
+    <Key name="F6" code="0x48" led="72" keysize="1" />
+    <Key name="F7" code="0x54" led="84" keysize="1" />
+    <Key name="F8" code="0x60" led="96" keysize="1" />
+    <Space keysize="0.75" />
+    <Key name="F9" code="0x6C" led="108" keysize="1" />
+    <Key name="F10" code="0x78" led="120" keysize="1" />
+    <Key name="F11" code="0x84" led="132" keysize="1" />
+    <Key name="F12" code="0x06" led="6" keysize="1" />
+    <Space keysize="0.25" />
+    <Key name="Print" code="0x12" led="18" keysize="1" />
+    <Key name="Scroll" code="0x1E" led="30" keysize="1" />
+    <Key name="Pause" code="0x2A" led="42" keysize="1" />
+    <Space keysize="0.25" />    
+    <Key name="MMStop" code="0x20" led="32" keysize="1" />
+    <Key name="MMRewind" code="0x2C" led="44" keysize="1" />
+    <Key name="MMPlay" code="0x38" led="56" keysize="1" />
+    <Key name="MMForward" code="0x44" led="68" keysize="1" />
+    <Space keysize="0.5" />
+  </Row>
+  
+  <!-- 2nd row -->
+  <Row>
+    <Key name="^" code="0x01" led="1" keysize="1" /> <!-- grave in us -->
+    <Key name="1" code="0x0D" led="13" keysize="1" />
+    <Key name="2" code="0x19" led="25" keysize="1" />
+    <Key name="3" code="0x25" led="37" keysize="1" />
+    <Key name="4" code="0x31" led="49" keysize="1" />
+    <Key name="5" code="0x3D" led="61" keysize="1" />
+    <Key name="6" code="0x49" led="73" keysize="1" />
+    <Key name="7" code="0x55" led="85" keysize="1" />
+    <Key name="8" code="0x61" led="97" keysize="1" />
+    <Key name="9" code="0x6D" led="109" keysize="1" />
+    <Key name="0" code="0x79" led="121" keysize="1" />
+    <Key name="ß" code="0x85" led="133" keysize="1" /> <!-- - _ in us -->
+    <Key name="´" code="0x07" led="7" keysize="1" /> <!-- += in us -->
+    <Key name="Backspace" code="0x1F" led="31" keysize="2" />
+    
+    <Space keysize="0.25" />
+    <Key name="Insert" code="0x36" led="54" keysize="1" />
+    <Key name="Pos1" code="0x42" led="66" keysize="1" />
+    <Key name="PageUp" code="0x4E" led="78" keysize="1" />
+
+    <Space keysize="0.25" />
+    <Key name="NumLock" code="0x50" led="80" keysize="1" />
+    <Key name="Num/" code="0x5C" led="92" keysize="1" />
+    <Key name="Num*" code="0x68" led="104" keysize="1" />
+    <Key name="Num-" code="0x74" led="116" keysize="1" />
+    <Space keysize="0.5" />
+  </Row>
+
+  <!-- 3rd row -->
+  <Row>
+    <Key name="Tab" code="0x02" led="2" keysize="1.5" />
+    <Key name="Q" code="0x0E" led="14" keysize="1" />
+    <Key name="W" code="0x1A" led="26" keysize="1" />
+    <Key name="E" code="0x26" led="38" keysize="1" />
+    <Key name="R" code="0x32" led="50" keysize="1" />
+    <Key name="T" code="0x3E" led="62" keysize="1" />
+    <Key name="Z" code="0x4A" led="74" keysize="1" /> <!-- Y in us -->
+    <Key name="U" code="0x56" led="86" keysize="1" />
+    <Key name="I" code="0x62" led="98" keysize="1" />
+    <Key name="O" code="0x6E" led="110" keysize="1" />
+    <Key name="P" code="0x7A" led="122" keysize="1" />
+    <Key name="Ü" code="0x86" led="134" keysize="1" /> <!-- left square in us -->
+    <Key name="*" code="0x5A" led="90" keysize="1" /> <!-- right square in us -->
+    
+    <Key name="Backslash" code="0x66" led="0" keysize="1.5" /> <!-- this key is return in de -->
+
+
+    <Space keysize="0.25" />
+    
+    <Key name="Delete" code="0x2B" led="43" keysize="1" />
+    <Key name="End" code="0x37" led="55" keysize="1" />
+    <Key name="PageDown" code="0x43" led="67" keysize="1" />
+
+    <Space keysize="0.25" />
+    
+    <Key name="Num7" code="0x09" led="9" keysize="1" />
+    <Key name="Num8" code="0x15" led="21" keysize="1" />
+    <Key name="Num9" code="0x21" led="33" keysize="1" />
+    <Space keysize="1" />
+    <Space keysize="0.5" />
+    
+  </Row>
+
+  
+  <Row>
+    <Key name="CapsLock" code="0x03" led="3" keysize="1.75" />
+    <Key name="A" code="0x0F" led="15" keysize="1" />
+    <Key name="S" code="0x1B" led="27" keysize="1" />
+    <Key name="D" code="0x27" led="39" keysize="1" />
+    <Key name="F" code="0x33" led="51" keysize="1" />
+    <Key name="G" code="0x3F" led="63" keysize="1" />
+    <Key name="H" code="0x4B" led="75" keysize="1" />
+    <Key name="J" code="0x57" led="87" keysize="1" />
+    <Key name="K" code="0x63" led="99" keysize="1" />
+    <Key name="L" code="0x6F" led="111" keysize="1" />
+    <Key name="Ö" code="0x7B" led="123" keysize="1" /> <!-- semicolon in us -->
+    <Key name="Ä" code="0x87" led="135" keysize="1" /> <!-- apostrophe in us -->
+    <!-- <Key name="#" code="" led="114" keysize="1" /> missin in us -->
+    <Key name="Return" code="0x7E" led="126" keysize="2.25" />
+    
+    <Space keysize="0.25" />
+    <Space keysize="3" /> 
+    <Space keysize="0.25" />
+    
+    <Key name="Num4" code="0x39" led="57" keysize="1" />
+    <Key name="Num5" code="0x45" led="69" keysize="1" />
+    <Key name="Num6" code="0x51" led="81" keysize="1" />
+    <Key name="Num+" code="0x80" led="128" keysize="1" />
+    <Space keysize="0.5" />
+  </Row>
+  
+  
+
+  <Row>
+    <Key name="LShift" code="0x04" led="4" keysize="2.25" />
+    <!-- <Key name=">" code="" led="16" keysize="1" /> missing in us --> 
+    <Key name="Y" code="0x1C" led="28" keysize="1" /> <!-- Z in us -->
+    <Key name="X" code="0x28" led="40" keysize="1" />
+    <Key name="C" code="0x34" led="52" keysize="1" />
+    <Key name="V" code="0x40" led="64" keysize="1" />
+    <Key name="B" code="0x4C" led="76" keysize="1" />
+    <Key name="N" code="0x58" led="88" keysize="1" />
+    <Key name="M" code="0x64" led="100" keysize="1" />
+    <Key name=";" code="0x70" led="112" keysize="1" /> <!-- comma in us -->
+    <Key name=":" code="0x7C" led="124" keysize="1" /> <!-- period in us -->
+    <Key name="-" code="0x88" led="136" keysize="1" /> <!-- forward shlash in us -->
+    <Key name="RShift" code="0x4F" led="79" keysize="2.75" />
+    
+    <Space keysize="0.25" />
+
+    <Space keysize="1" />
+    <Key name="CursorUp" code="0x67" led="103" keysize="1" />
+    <Space keysize="1" />
+    
+    <Space keysize="0.25" />
+    
+    <Key name="Num1" code="0x5D" led="93" keysize="1" />
+    <Key name="Num2" code="0x69" led="105" keysize="1" />
+    <Key name="Num3" code="0x75" led="117" keysize="1" />
+    <Key name="NumEnter" code="0x8C" led="140" keysize="1" />
+
+    <Space keysize="0.5" />
+  </Row>
+
+  <Row>
+    <Key name="LCtrl" code="0x05" led="5" keysize="1.5" />
+    <Key name="LWin" code="0x11" led="17" keysize="1" />
+    <Key name="LAlt" code="0x1D" led="29" keysize="1.25" />
+    <Key name="Space" code="0x35" led="53" keysize="6.25" />
+    <Key name="AltGr" code="0x59" led="89" keysize="1.25" />
+    <Key name="RWin" code="0x65" led="101" keysize="1" />
+    <Key name="App" code="0x71" led="113" keysize="1" />
+    <Key name="RCtrl" code="0x5B" led="91" keysize="1.75" />
+
+    <Space keysize="0.25" />
+    <Key name="CursorLeft" code="0x73" led="115" keysize="1" />
+    <Key name="CursorDown" code="0x7F" led="127" keysize="1" />
+    <Key name="CursorRight" code="0x8B" led="139" keysize="1" />
+    <Space keysize="0.25" />
+    
+    <Key name="Num0" code="0x81" led="129" keysize="2" />
+    <Key name="Num," code="0x8D" led="141" keysize="1" /> <!-- Num. in us -->
+    <Space keysize="1" />
+    <Space keysize="0.5" />
+      
+  </Row>
+
+  
+</Layout>

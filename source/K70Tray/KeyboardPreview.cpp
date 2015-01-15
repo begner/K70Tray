@@ -4,9 +4,9 @@
 extern HINSTANCE			ghInst;
 extern HWND					ghDlgMain;
 extern Theme				* currentTheme;
-extern unsigned char		g_XYk[K70_COLS][K70_ROWS];
+extern unsigned char		g_XYk[K70_ROWS][K70_COLS];
 extern LightControl			* pLC;
-extern K70RGB				ledState[K70_ROWS][K70_COLS];
+extern K70RGB				ledState[K70_COLS][K70_ROWS];
 
 
 KeyboardPreview::KeyboardPreview(HDC paintHdc, RECT* paintRect)
@@ -42,7 +42,7 @@ KeyboardPreview::KeyboardPreview(HDC paintHdc, RECT* paintRect)
 	backgroundRect.right = bufferWidth;
 	backgroundRect.bottom = bufferHeight;
 
-	RowSpaces[K70_COLS] = { 0 };
+	RowSpaces[K70_ROWS] = { 0 };
 	RowSpaces[0] = 10;
 	RowSpaces[1] = 3;
 }
@@ -71,10 +71,10 @@ void KeyboardPreview::PaintKeyboardState() {
 
 		int lastKeyCode = 255;
 		int lastKeyBeginX = 0;
-		for (int y = 0; y < K70_COLS; y++)
+		for (int y = 0; y < K70_ROWS; y++)
 		{
 
-			for (int x = 0; x < K70_ROWS; x++)
+			for (int x = 0; x < K70_COLS; x++)
 			{
 				// keyCode holen
 				int keyCode = g_XYk[y][x];

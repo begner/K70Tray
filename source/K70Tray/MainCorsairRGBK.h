@@ -30,8 +30,10 @@ public:
 	void AppStart(HDC winHdc, RECT* prc);
 	void SendLEDState();
 	vector<string> GetXMLFiles(wstring filter);
+	K70XMLConfig * getConfig();
 	void ChangeTheme(string themeName);
 	void ChangeLayout(string layoutName);
 	void PaintKeyboardState();
+	void quitApp();
 };
 

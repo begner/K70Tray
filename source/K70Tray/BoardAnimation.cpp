@@ -4,8 +4,8 @@
 #include "Keyboard.h"
 #include "LightControl.h"
 
-extern K70RGB					ledState[K70_ROWS][K70_COLS];
-extern unsigned char		g_XYk[K70_COLS][K70_ROWS];
+extern K70RGB					ledState[K70_COLS][K70_ROWS];
+extern unsigned char		g_XYk[K70_ROWS][K70_COLS];
 extern Theme				* currentTheme; // Current Theme
 extern LightControl			* pLC; // Current Light Control
 
@@ -79,7 +79,7 @@ void BoardAnimation::tick() {
 		int animOnY = startY + y;
 
 		// out of range?
-		if ((animOnY < 0 || animOnY > K70_COLS - 1) || (animOnX < 0 || animOnX > K70_ROWS - 1)) {
+		if ((animOnY < 0 || animOnY > K70_ROWS - 1) || (animOnX < 0 || animOnX > K70_COLS - 1)) {
 			// set as ended - and continue to next item
 			animationEndCount++;
 			continue;

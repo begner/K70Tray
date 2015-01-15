@@ -5,7 +5,7 @@
 
 using namespace std;
 
-extern K70RGB					ledState[K70_ROWS][K70_COLS];
+extern K70RGB					ledState[K70_COLS][K70_ROWS];
 extern LightControl			* pLC;
 extern string				g_keyNames[K70_KEY_MAX];
 extern unsigned char		g_keyCodes[K70_KEY_MAX];

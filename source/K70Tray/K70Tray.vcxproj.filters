@@ -173,5 +173,8 @@
     <Xml Include="Theme.Lol.xml">
       <Filter>XMLFiles</Filter>
     </Xml>
+    <Xml Include="Layout.K70.US.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

@@ -2,8 +2,8 @@
 #include "LightControl.h"
 
 extern unsigned char		g_LEDState[K70_KEY_MAX][3], g_PrevLEDState[K70_KEY_MAX][3];
-extern unsigned char		g_XY[K70_COLS][K70_ROWS];
-extern unsigned char		g_XYk[K70_COLS][K70_ROWS];
+extern unsigned char		g_XY[K70_ROWS][K70_COLS];
+extern unsigned char		g_XYk[K70_ROWS][K70_COLS];
 extern unsigned char		g_ledAdress[K70_KEY_MAX];
 extern unsigned char		g_keyCodes[K70_KEY_MAX];
 extern float				g_keySizes[K70_KEY_MAX];
@@ -23,9 +23,9 @@ int LightControl::getLedAdressByKeyCode(unsigned char keycode) {
 int LightControl::getXYByKeyCode(unsigned char keycode, string position) {
 	int ret = 1;
 
-	for (int y = 0; y < K70_COLS; y++) // Y 7 = CTRL, Windowskey, Alt, space...
+	for (int y = 0; y < K70_ROWS; y++) // Y 7 = CTRL, Windowskey, Alt, space...
 	{
-		for (int x = 0; x < K70_ROWS; x++)
+		for (int x = 0; x < K70_COLS; x++)
 		{
 			if (g_XYk[y][x] == keycode) {
 				if (position == string("x")) {
@@ -51,12 +51,12 @@ void LightControl::BuildMatrix()
 	auto sizes = g_keySizes;
 
 	//for (int y = 0; y < 7; y++) // Y 0 = Brightness key, winlock & mute
-	for (int y = 0; y < K70_COLS; y++) // Y 0 = CTRL, Windowskey, Alt, space...
+	for (int y = 0; y < K70_ROWS; y++) // Y 0 = CTRL, Windowskey, Alt, space...
 	{
 		unsigned char key;
 		int size = 0;
 
-		for (int x = 0; x < K70_ROWS; x++)
+		for (int x = 0; x < K70_COLS; x++)
 		{
 			if (size == 0)
 			{
@@ -93,12 +93,12 @@ void LightControl::BuildMatrixVK()
 	auto sizes = g_keySizes;
 
 	//for (int y = 0; y < 7; y++) // Y 1 = F1, F2... 
-	for (int y = 0; y < K70_COLS; y++) // Y 1 = CTRL, Windowskey, Alt, space...
+	for (int y = 0; y < K70_ROWS; y++) // Y 1 = CTRL, Windowskey, Alt, space...
 	{
 		unsigned char key;
 		int size = 0;
 
-		for (int x = 0; x < K70_ROWS; x++)
+		for (int x = 0; x < K70_COLS; x++)
 		{
 			if (size == 0)
 			{

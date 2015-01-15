@@ -41,7 +41,7 @@ private:
 	int TextMarginTop = 1;
 	int TextMarginRight = 3;
 	int TextMarginBottom = 1;
-	int RowSpaces[K70_COLS];
+	int RowSpaces[K70_ROWS];
 	
 
 public:

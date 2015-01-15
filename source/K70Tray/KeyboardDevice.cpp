@@ -4,8 +4,7 @@
 
 KeyboardDevice::KeyboardDevice()
 {
-	hDevice = GetDeviceHandle(0x1B1C, 0x1B13, 0x3);
-
+	initDevice();
 }
 
 
@@ -15,6 +14,24 @@ KeyboardDevice::~KeyboardDevice()
 }
 
 
+void KeyboardDevice::initDevice()
+{
+	hDevice = GetDeviceHandle(0x1B1C, PID_K70, 0x3);
+	if (hDevice) {
+		deviceName = "K70";
+	}
+	else {
+		hDevice = GetDeviceHandle(0x1B1C, PID_K95, 0x3);
+		if (hDevice) {
+			deviceName = "K95";
+		}
+	}
+	
+}
+
+string KeyboardDevice::getDeviceName() {
+	return deviceName;
+}
 
 int KeyboardDevice::deviceFound() {
 	if (!hDevice) {

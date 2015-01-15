@@ -5,8 +5,8 @@
 
 extern KeyboardDevice		* keyBoardDevice;
 extern unsigned char		g_ledAdress[K70_KEY_MAX];
-extern unsigned char		g_XYk[K70_COLS][K70_ROWS];
-extern unsigned char		g_XY[K70_COLS][K70_ROWS];
+extern unsigned char		g_XYk[K70_ROWS][K70_COLS];
+extern unsigned char		g_XY[K70_ROWS][K70_COLS];
 extern unsigned char		g_keyCodes[K70_KEY_MAX];
 extern float				g_keySizes[K70_KEY_MAX];
 extern string				g_keyNames[K70_KEY_MAX];
@@ -14,7 +14,7 @@ extern int					g_iInterval;
 extern Theme				* currentTheme;
 extern LightControl			* pLC;
 extern unsigned char		g_LEDState[K70_KEY_MAX][3], g_PrevLEDState[144][3];
-extern K70RGB				ledState[K70_ROWS][K70_COLS];
+extern K70RGB				ledState[K70_COLS][K70_ROWS];
 extern HINSTANCE			ghInst;
 extern HWND					ghDlgMain;
 
@@ -110,9 +110,9 @@ void MainCorsairRGBK::refreshKeyboard()
 		if (!am->IsTickRunning())
 		{
 			currentTheme->Tick();
-			for (int x = 0; x < K70_ROWS; x++)
+			for (int x = 0; x < K70_COLS; x++)
 			{
-				for (int y = 0; y < K70_COLS; y++)
+				for (int y = 0; y < K70_ROWS; y++)
 				{
 					SetXYK70RGB(x, y, ledState[x][y].getR(), ledState[x][y].getG(), ledState[x][y].getB());
 				}
@@ -131,9 +131,9 @@ int MainCorsairRGBK::SetXYK70RGB(int x, int y, int r, int g, int b)
 }
 
 void MainCorsairRGBK::ResetKeyboard() {
-	for (int x = 0; x < K70_ROWS; x++)
+	for (int x = 0; x < K70_COLS; x++)
 	{
-		for (int y = 0; y < K70_COLS; y++)
+		for (int y = 0; y < K70_ROWS; y++)
 		{
 			SetXYK70RGB(x, y, 0, 0, 0);
 		}
@@ -227,7 +227,9 @@ void MainCorsairRGBK::KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
 			else {
 				realCode = p->vkCode;
 			}
-			currentTheme->KeyDown(realCode);
+			if (currentTheme) {
+				currentTheme->KeyDown(realCode);
+			}
 			
 			// DebugMsg("KeyDown: 0x%x", realCode);
 
@@ -242,8 +244,9 @@ void MainCorsairRGBK::KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
 			}
 
 			// DebugMsg("KeyUp: 0x%x", realCode);
-			
-			currentTheme->KeyUp(realCode);
+			if (currentTheme) {
+				currentTheme->KeyUp(realCode);
+			}
 		default:
 			break;
 		}
@@ -258,12 +261,15 @@ void MainCorsairRGBK::ChangeLayout(string layoutName) {
 
 	DebugMsg("Change Layout to '%s'", layoutName.c_str());
 	SetCurrentLayout(layoutName);
-	config->parseLayout(layoutName.c_str());
+	if (!config->parseLayout(layoutName.c_str())) {
+		DebugMsg("WARNING: Errors at loading Layout file. Check warnings above.");
+		currentTheme = NULL;
+	};
 
 	pLC->BuildMatrix();
 	DebugMsg("Keyboard matrix setup.");
 	/*
-	for (int y = K70_COLS; y-- > 0;) // Y 1 = CTRL, Windowskey, Alt, space...
+	for (int y = K70_ROWS; y-- > 0;) // Y 1 = CTRL, Windowskey, Alt, space...
 	{
 		DebugMsg(int_array_to_string(g_XY[y], sizeof(g_XY[y]), 10));
 	}
@@ -272,7 +278,7 @@ void MainCorsairRGBK::ChangeLayout(string layoutName) {
 	pLC->BuildMatrixVK();
 	DebugMsg("Virtual keyboard matrix setup.");
 	/*
-	for (int y = K70_COLS; y-- > 0;) // Y 1 = CTRL, Windowskey, Alt, space...
+	for (int y = K70_ROWS; y-- > 0;) // Y 1 = CTRL, Windowskey, Alt, space...
 	{
 		DebugMsg(int_array_to_string(g_XYk[y], sizeof(g_XYk[y]), 10));
 	}
@@ -289,6 +295,14 @@ void MainCorsairRGBK::ChangeLayout(string layoutName) {
 
 	
 
+}
+
+void MainCorsairRGBK::quitApp() {
+	config->saveConfig();
+}
+
+K70XMLConfig * MainCorsairRGBK::getConfig() {
+	return config;
 }
 
 void MainCorsairRGBK::ChangeTheme(string themeName) {

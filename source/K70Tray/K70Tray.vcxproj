@@ -143,10 +143,13 @@
       <SubType>Designer</SubType>
     </Xml>
     <Xml Include="Layout.K70.German.xml" />
+    <Xml Include="Layout.K70.US.xml" />
     <Xml Include="Theme.Dev.xml">
       <SubType>Designer</SubType>
     </Xml>
-    <Xml Include="Theme.Lol.xml" />
+    <Xml Include="Theme.Lol.xml">
+      <SubType>Designer</SubType>
+    </Xml>
     <Xml Include="Theme.modifierLight.xml">
       <SubType>Designer</SubType>
     </Xml>

@@ -99,6 +99,7 @@ bool K70XMLConfig::readConfig()
 	}
 	else {
 		DebugMsg("No config.xml found!");
+		return false;
 	}
 	return true;
 }

@@ -350,13 +350,21 @@ BOOL StartInstance() {
 		return (INT_PTR)FALSE;
 	};
 	
-	
+
 
 	
 
 	DebugMsg("App started...");
 
 	// create MainClass
+	mainCorsairK70RGBK = new MainCorsairRGBK();
+	if (!mainCorsairK70RGBK->AppInit(true)) {
+		DialogBox(ghInst, MAKEINTRESOURCE(IDD_NOXMLFOUND), ghWnd, ErrorStartup);
+		return (INT_PTR)FALSE;
+	}
+	delete mainCorsairK70RGBK;
+
+
 	mainCorsairK70RGBK = new MainCorsairRGBK();
 
 	// Initialize LLV Keyboard Hook
@@ -388,6 +396,8 @@ BOOL StartInstance() {
 	else {
 		DebugMsg("Device found: '%s'", keyBoardDevice->getDeviceName().c_str());
 	}
+
+	
 
 	// Create Animation Thread (Wich starts the app)
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)AppStart, NULL, NULL, NULL);
@@ -716,25 +726,36 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 		*/
+	case WM_WINDOWPOSCHANGED:
+	{
+		RECT Rect;
+		GetWindowRect(ghDlgMain, &Rect);
+		if (Rect.top > 0 && Rect.left > 0) {
+			mainCorsairK70RGBK->getConfig()->setLastWindowPosition(Rect.left, Rect.top);
+		}
+
+	}
+	break;
 	case WM_SHOWWINDOW: 
 	{
+		RECT Rect;
+		GetWindowRect(ghDlgMain, &Rect);
+
 		if (wParam) { // only on open!
-			int winPosX = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("x");
-			int winPosY = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("y");
+			INT winPosX = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("x");
+			INT winPosY = mainCorsairK70RGBK->getConfig()->getLastWindowPosition("y");
 			if (winPosX > -1 && winPosY > -1) {
-				RECT Rect;
-				GetWindowRect(ghDlgMain, &Rect);
-				int winWidth = Rect.right - Rect.left;
-				int winHeight = Rect.bottom - Rect.top;
+				INT winWidth = Rect.right - Rect.left;
+				INT winHeight = Rect.bottom - Rect.top;
+				DebugMsg("", winPosX, winPosY, winWidth, winHeight);
 				MoveWindow(ghDlgMain, winPosX, winPosY, winWidth, winHeight, FALSE);
 			}
 		}
-		else {
-			RECT Rect;
-			GetWindowRect(ghDlgMain, &Rect);
-			mainCorsairK70RGBK->getConfig()->setLastWindowPosition(Rect.top, Rect.left);
-		}
-
+		
+		
+		
+		
+		return 0;
 	}
 	break;
 	case WM_INITDIALOG:
@@ -903,6 +924,7 @@ void AppStart()
 	HDC hdc = GetDC(pArea);
 
 	GetClientRect(pArea, &rcClient);
+	mainCorsairK70RGBK->AppInit(false);
 	mainCorsairK70RGBK->AppStart(hdc, &rcClient);
 
 	ReleaseDC(pArea, hdc);

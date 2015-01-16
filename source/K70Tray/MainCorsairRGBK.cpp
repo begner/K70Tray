@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MainCorsairRGBK.h"
 #include "Resource.h"
-
+#include <windows.h>
 
 extern KeyboardDevice		* keyBoardDevice;
 extern unsigned char		g_ledAdress[K70_KEY_MAX];
@@ -17,6 +17,8 @@ extern unsigned char		g_LEDState[K70_KEY_MAX][3], g_PrevLEDState[144][3];
 extern K70RGB				ledState[K70_COLS][K70_ROWS];
 extern HINSTANCE			ghInst;
 extern HWND					ghDlgMain;
+extern INT_PTR CALLBACK	ErrorStartup(HWND, UINT, WPARAM, LPARAM);
+extern HWND				ghWnd;
 
 MainCorsairRGBK::MainCorsairRGBK()
 {
@@ -28,17 +30,17 @@ MainCorsairRGBK::~MainCorsairRGBK()
 }
 
 
-void MainCorsairRGBK::AppStart(HDC winHdc, RECT* prc)
+bool MainCorsairRGBK::AppInit(bool justCheck)
 {
-	
-	
 	vector<string> allThemeFiles = GetXMLFiles(wstring(L"Theme.*.xml"));
 	for (vector<string>::iterator it = allThemeFiles.begin(); it < allThemeFiles.end(); it++) {
 		string themeName = (*it);
 		themeName.replace(0, 6, "");
-		themeName.replace(themeName.length()-4, 4, "");
+		themeName.replace(themeName.length() - 4, 4, "");
 		DebugMsg("Theme found: '%s'", themeName.c_str());
-		addThemeToDropdown(themeName);
+		if (justCheck) {
+			addThemeToDropdown(themeName);
+		}
 	}
 	vector<string> allLayoutFiles = GetXMLFiles(wstring(L"Layout.*.xml"));
 
@@ -46,15 +48,27 @@ void MainCorsairRGBK::AppStart(HDC winHdc, RECT* prc)
 		string layoutName = (*it);
 		layoutName.replace(0, 7, "");
 		layoutName.replace(layoutName.length() - 4, 4, "");
-		addLayoutToDropdown(layoutName);
 		DebugMsg("Layout found: '%s'", layoutName.c_str());
+		if (justCheck) {
+			addLayoutToDropdown(layoutName);
+		}
 	}
 
+	if (allThemeFiles.size() < 1 && allLayoutFiles.size() < 1) {
+		DebugMsg("Theme.*.xml or Layout.*.xml not found!");
+		return false;
+	}
 
 	currentTheme = new Theme();
 	config = new K70XMLConfig(this);
-	config->readConfig();
-	
+	if (!config->readConfig()) {
+		DebugMsg("config.xml not found!");
+		return false;
+	}
+	return true;
+}
+
+void MainCorsairRGBK::AppStart(HDC winHdc, RECT* prc) {
 	ChangeLayout(config->getLayoutName());
 
 	keyboardPreview = new KeyboardPreview(winHdc, prc);

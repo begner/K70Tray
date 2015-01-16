@@ -27,6 +27,7 @@ public:
 	MainCorsairRGBK();
 	~MainCorsairRGBK();
 	void KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam);
+	bool AppInit(bool justCheck);
 	void AppStart(HDC winHdc, RECT* prc);
 	void SendLEDState();
 	vector<string> GetXMLFiles(wstring filter);

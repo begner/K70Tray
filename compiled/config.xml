@@ -3,7 +3,7 @@
     <Layout>K70.German</Layout>
     <Theme>Rainbow</Theme>
     <UpdateInterval>30</UpdateInterval>
-    <openMainDlg>1</openMainDlg>
+    <openMainDlg>0</openMainDlg>
     <WindowPositionTop>105</WindowPositionTop>
     <WindowPositionLeft>1763</WindowPositionLeft>
 </Config>

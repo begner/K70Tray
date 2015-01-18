@@ -4,16 +4,13 @@ K70Tray
 Alternative Controll App for Corsair K70RGB
 
 Base on Ideas of:
-https://github.com/PawYT/K70-RGB-Mod
-http://www.reddit.com/user/chrisgzy
-http://www.reddit.com/user/fly-hard
+- https://github.com/PawYT/K70-RGB-Mod
+- http://www.reddit.com/user/chrisgzy
+- http://www.reddit.com/user/fly-hard
 
 The sources should compile on Microsoft Visual Studio Comunity Editon 2013 (which is free).
 
-If you just want to use it - just download the files in the "compiled" dir. ( https://github.com/begner/K70Tray/tree/master/compiled ).
-
-
-
+If you just want to use it - just download the ZIP file named "K70Tray_release_XXX.rar" - unpack and start.
 
 What it is
 ==========
@@ -22,13 +19,17 @@ A Windows System Tray Application which allows you to define RGB Keyboard Layout
 This software is as-it-is - and far from bugfree. It is not testet - but you've got a high chance to get it work.
 Please report errors to me.
 
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04.PNG)
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_2.PNG)
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_3.PNG)
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_4.PNG)
+
 
 Issues
 ======
 That is my first C++ Project EVER and im not good in it.
 I noticed, that it's got some memory leaks (on switching Themes) :D
 Please help me if you like - and fork it.
-The Theme Switching via Tray Icon Contextmenu is not working - Click "Open" and use the ComboBox.
 
 
 XML Layout
@@ -36,6 +37,8 @@ XML Layout
 
 The Keyboardlayouts in this world are different. So - the K70Tray reads XML Files which holds the definition.
 Basicly its a Map: which key has which scancode, where is it on the Keyboard how big is ist and which led adress belongs to it.
+
+Take a look at the examples and play with that features.
 
 I'll be glad if you send me other XML-Layouts, so i'll commit them.
 
@@ -197,10 +200,13 @@ Use a Key tag instead of all:
 
 Or you can use a KeyGroup (look at Theme.Rainbow.xml)
 
-More features to document:
+
+More features i need to document:
 ==========================
 - syncName & SyncGroups
 - sharedAnimations and sharedKeyGroups
 - onRelease join="add" / join="overwrite"
+- Overlay Maps
+- boardAnimations
 
 Have Fun!

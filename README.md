@@ -19,10 +19,10 @@ A Windows System Tray Application which allows you to define RGB Keyboard Layout
 This software is as-it-is - and far from bugfree. It is not testet - but you've got a high chance to get it work.
 Please report errors to me.
 
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04.PNG)
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_2.PNG)
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_3.PNG)
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_4.PNG)
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04.PNG =100x)
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_2.PNG =100x)
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_3.PNG =100x)
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_4.PNG =100x)
 
 
 Issues

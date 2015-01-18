@@ -29,7 +29,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>false</CLRSupport>
   </PropertyGroup>
@@ -54,7 +54,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);UNICODE</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <CompileAsManaged>false</CompileAsManaged>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -62,6 +62,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,25 +72,31 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions);UNICODE</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <CompileAsManaged>false</CompileAsManaged>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="log.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoardAnimation.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="convert.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="K70Tray.h" />
     <ClInclude Include="Keyboard.h" />
@@ -104,12 +111,14 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Theme.h" />
+    <ClInclude Include="ThemeInfo.h" />
     <ClInclude Include="ThemeMap.h" />
     <ClInclude Include="K70XMLConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoardAnimation.cpp" />
     <ClCompile Include="convert.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="K70Tray.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="KeyboardDevice.cpp" />
@@ -124,6 +133,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Theme.cpp" />
+    <ClCompile Include="ThemeInfo.cpp" />
     <ClCompile Include="ThemeMap.cpp" />
     <ClCompile Include="K70XMLConfig.cpp" />
   </ItemGroup>
@@ -135,28 +145,21 @@
     <Image Include="..\Res\icon.png" />
     <Image Include="..\Res\keyboard.ico" />
     <Image Include="..\Res\mainBackground.bmp" />
+    <Image Include="..\Res\themeImageMask.bmp" />
     <Image Include="K70Tray.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="config.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-    <Xml Include="Layout.K70.German.xml" />
-    <Xml Include="Layout.K70.US.xml" />
-    <Xml Include="Theme.Dev.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-    <Xml Include="Theme.Lol.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-    <Xml Include="Theme.modifierLight.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-    <Xml Include="Theme.Rainbow.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-    <Xml Include="Theme.whiteNeutral.xml" />
+    <Xml Include="config.xml" />
+    <Xml Include="Layouts\Layout.K70.German.xml" />
+    <Xml Include="Layouts\Layout.K70.UK.xml" />
+    <Xml Include="Layouts\Layout.K70.US.xml" />
+    <Xml Include="Themes\Development\Theme.Development.xml" />
+    <Xml Include="Themes\JustWhite\Theme.JustWhite.xml" />
+    <Xml Include="Themes\LoL.Annie\Theme.LoL.Annie.xml" />
+    <Xml Include="Themes\ModifierKeys\Theme.ModifierKeys.xml" />
+    <Xml Include="Themes\MovingKey\Theme.MovingKey.xml" />
+    <Xml Include="Themes\Rainbow\Theme.Rainbow.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

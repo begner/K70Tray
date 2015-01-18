@@ -68,7 +68,7 @@ void BoardAnimation::startAt(int x, int y) {
 
 void BoardAnimation::tick() {
 	// DebugMsg("BoardAnimation Tick at %i with size of %i", currentTick, placedAnimation.size());
-	int animationEndCount = 0;
+	size_t animationEndCount = 0;
 	for (map <string, vector<K70RGB>>::iterator it = placedAnimation.begin(); it != placedAnimation.end(); ++it) {		
 		int x = getPositionOfAnimationAdress(it->first, "x") * 4;
 		int y = getPositionOfAnimationAdress(it->first, "y");

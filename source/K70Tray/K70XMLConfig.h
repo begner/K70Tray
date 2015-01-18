@@ -7,6 +7,7 @@
 #include "Shlwapi.h"
 #include "Theme.h"
 #include "ThemeMap.h"
+#include "FileSystem.h"
 #include "K70RGB.h"
 
 #include <stdlib.h>
@@ -43,6 +44,13 @@ private:
 	void saveConfigValue(TiXmlDocument * doc, string tagName, string content);
 	int windowPositionTop = -1;
 	int windowPositionLeft = -1;
+	vector<vector<string>> getKeyGroupsOfMap(TiXmlElement* mapNode);
+	void parseMap(
+		ThemeMap * myMap,
+		TiXmlElement* mapNode,
+		map <string, vector<string>> sharedKeyGroupMap,
+		map <string, vector<K70RGB>> sharedAnimationMap,
+		map <string, BoardAnimation> sharedBoardAnimationMap);
 
 
 };

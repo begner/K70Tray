@@ -4,6 +4,7 @@
     <Theme>Rainbow</Theme>
     <UpdateInterval>30</UpdateInterval>
     <openMainDlg>0</openMainDlg>
-    <WindowPositionTop>105</WindowPositionTop>
-    <WindowPositionLeft>1763</WindowPositionLeft>
+    <WindowPositionTop>298</WindowPositionTop>
+    <WindowPositionLeft>945</WindowPositionLeft>
+    <ShowConsole>0</ShowConsole>
 </Config>

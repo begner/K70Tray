@@ -18,7 +18,7 @@ private:
 	int getPositionOfAnimationAdress(string adress, string pos);
 	int startX = 0;
 	int startY = 0;
-	int currentTick = 0;
+	size_t currentTick = 0;
 public:
 	BoardAnimation(string name);
 	BoardAnimation();

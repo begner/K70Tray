@@ -13,3 +13,5 @@ extern			void		addThemeToDropdown(string themename);
 extern			void		addLayoutToDropdown(string layoutname);
 extern			void		SetCurrentLayout(string layoutname);
 extern			void		SetCurrentTheme(string layoutname);
+extern			void		setShowConsole(bool checked);
+extern			bool		getShowConsole();

@@ -19,6 +19,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="log.txt">
+      <Filter>XMLFiles</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -78,6 +81,12 @@
     <ClInclude Include="KeyboardPreview.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ThemeInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -125,6 +134,12 @@
     <ClCompile Include="KeyboardPreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThemeInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="K70Tray.rc">
@@ -150,30 +165,39 @@
     <Image Include="..\Res\icon.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\Res\themeImageMask.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Themes\Rainbow\Theme.Rainbow.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Themes\LoL.Annie\Theme.LoL.Annie.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Themes\ModifierKeys\Theme.ModifierKeys.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Themes\Development\Theme.Development.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Themes\MovingKey\Theme.MovingKey.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Themes\JustWhite\Theme.JustWhite.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Layouts\Layout.K70.German.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Layouts\Layout.K70.UK.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
+    <Xml Include="Layouts\Layout.K70.US.xml">
+      <Filter>XMLFiles</Filter>
+    </Xml>
     <Xml Include="config.xml">
-      <Filter>XMLFiles</Filter>
-    </Xml>
-    <Xml Include="Theme.Dev.xml">
-      <Filter>XMLFiles</Filter>
-    </Xml>
-    <Xml Include="Theme.modifierLight.xml">
-      <Filter>XMLFiles</Filter>
-    </Xml>
-    <Xml Include="Theme.Rainbow.xml">
-      <Filter>XMLFiles</Filter>
-    </Xml>
-    <Xml Include="Theme.whiteNeutral.xml">
-      <Filter>XMLFiles</Filter>
-    </Xml>
-    <Xml Include="Layout.K70.German.xml">
-      <Filter>XMLFiles</Filter>
-    </Xml>
-    <Xml Include="Theme.Lol.xml">
-      <Filter>XMLFiles</Filter>
-    </Xml>
-    <Xml Include="Layout.K70.US.xml">
       <Filter>XMLFiles</Filter>
     </Xml>
   </ItemGroup>

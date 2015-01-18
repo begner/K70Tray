@@ -29,6 +29,7 @@ ThemeMap::ThemeMap()
 {
 	BoardAnimationMap.clear();
 	keyColorMap.clear();
+	activeBoardAnimations.reserve(200);
 }
 
 
@@ -38,8 +39,17 @@ ThemeMap::~ThemeMap() {
 }
 
 
+void ThemeMap::SetOverlay(bool state) {
+	isOverlay = state;
+}
+
+bool ThemeMap::GetOverlay() {
+	return isOverlay;
+}
+
+
 void ThemeMap::addBoardAnimation(BoardAnimation ba) {
-	DebugMsg("Add BoardAnimation with size %i", ba.getAnimationSize());
+	// DebugMsg("Add BoardAnimation with size %i", ba.getAnimationSize());
 	BoardAnimationMap.insert(make_pair(ba.getName(), ba));
 }
 
@@ -223,7 +233,7 @@ void ThemeMap::KeyDown(unsigned int keyCode) {
 }
 
 void ThemeMap::KeyUp(unsigned int keyCode) {
-	DebugMsg("ThemeMap - Key Up: int=%i hex=0x%X\n", keyCode, keyCode);
+	DebugMsg("ThemeMap - Key Up: int=%i hex=0x%X", keyCode, keyCode);
 	map <unsigned int, KeyColor>::iterator it;
 	it = keyColorMap.find(keyCode);
 
@@ -232,7 +242,7 @@ void ThemeMap::KeyUp(unsigned int keyCode) {
 }
 
 void ThemeMap::Activate() {
-	DebugMsg("Activate Map '%s'\n", getName().c_str());
+	DebugMsg("Activate Map '%s'", getName().c_str());
 }
 
 bool ThemeMap::IsTickRunning() {
@@ -245,6 +255,10 @@ bool ThemeMap::IsTickRunning() {
 }
 
 void ThemeMap::Tick() {
+	if (tickIsRunning) {
+		return;
+	}
+
 	tickIsRunning = true;
 	// printf("keyColorMap size %i \n", keyColorMap.size());
 	for (map <unsigned int, KeyColor>::iterator it = keyColorMap.begin(); it != keyColorMap.end(); ++it) {
@@ -271,7 +285,7 @@ void ThemeMap::Tick() {
 		ledState[px][py].setB(curColor.getB());
 		
 
-
+		
 		
 		// copy Board Animations to active vector
 		if (kc->getJustReleased()) {
@@ -313,8 +327,10 @@ void ThemeMap::Tick() {
 		
 	}
 	
+	int abbasize = activeBoardAnimations.size();
 	
-	if (activeBoardAnimations.size() > 0) {
+	if (abbasize > 0) {
+		// DebugMsg("%i", abbasize);
 		vector<BoardAnimation>::iterator it = activeBoardAnimations.begin();
 		while (it != activeBoardAnimations.end())
 		{
@@ -331,7 +347,6 @@ void ThemeMap::Tick() {
 			{
 				++it;
 			}
-
 		}
 	}
 	

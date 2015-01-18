@@ -18,6 +18,7 @@
 #include <iostream>
 #include <fstream>
 
+
 #define PACKVERSION(major,minor) MAKELONG(minor,major)
 #define MAX_LOADSTRING 100
 
@@ -48,6 +49,9 @@ void addThemeToDropdown(string themename);
 void addLayoutToDropdown(string layoutname);
 void SetCurrentLayout(string layoutname);
 void SetCurrentTheme(string layoutname);
+void setShowConsole(bool checked);
+bool getShowConsole();
+void showConsole(bool state);
 DWORD GetDLLVersion(LPCTSTR lpszDllName);
 void ApplicationEndCleanup();
 ProcessList processList;
@@ -86,7 +90,11 @@ K70RGB				ledState[K70_COLS][K70_ROWS] = {};
 
 const int ID_TIMER = 1;
 
-static HBITMAP hBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_MAINBACKGROUND));
+static HBITMAP mainWindowBackgroundHBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_MAINBACKGROUND));
+
+ofstream			myLogFile;
+
+
 
 
 //
@@ -94,6 +102,17 @@ static HBITMAP hBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_M
 // 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPTSTR    lpCmdLine, _In_ int       nCmdShow)
 {
+	myLogFile.open("log.txt", ios::app);
+	DebugMsg("tWinMain -> startLog...");
+
+	#ifdef USE_GDIPULS
+		DebugMsg("Using GDIPlus!");
+		GdiplusStartupInput gdiplusStartupInput;
+		ULONG_PTR gdiplusToken;
+		GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+	#endif
+	
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -122,6 +141,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 			DispatchMessage(&msg);
 		}
 	}
+	
+	#ifdef USE_GDIPULS
+		GdiplusShutdown(gdiplusToken);
+	#endif
 
 	return (int) msg.wParam;
 }
@@ -134,7 +157,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstanc
 // 
 void DebugMsg(string msg, ...) {
 
-	msg += "\n";
+	msg+= "\n";
+	
 	char buffer[2048];
 	va_list args;
 	va_start(args, msg);
@@ -167,11 +191,8 @@ void DebugMsg(string msg, ...) {
 
 
 	// write log
-	ofstream myfile;
-	myfile.open("log.txt", ios::app);
-	myfile << smsg;
-	myfile.close();
-
+	myLogFile << smsg;
+	
 	
 	// get edit control from dialog
 	HWND hwndOutput = GetDlgItem(ghDlgMain, IDC_APPMESSAGES);
@@ -208,6 +229,7 @@ void addThemeToDropdown(string themename)
 	HWND hWndComboBox = GetDlgItem(ghDlgMain, IDC_THEMESELECT);
 	themeItems.push_back(themename);
 	SendMessage(hWndComboBox, (UINT)CB_ADDSTRING, (WPARAM)0, (LPARAM)s2ws(themename).c_str());
+	SetFocus(GetDlgItem(ghDlgMain, IDC_APPMESSAGES));
 }
 
 
@@ -225,8 +247,11 @@ void SetCurrentTheme(string themename) {
 	DebugMsg("index %i", index);
 	HWND hWndComboBox = GetDlgItem(ghDlgMain, IDC_THEMESELECT);
 	SendMessage(hWndComboBox, CB_SETCURSEL, (WPARAM)index, (LPARAM)0);
+	SetFocus(GetDlgItem(ghDlgMain, IDC_APPMESSAGES));
 
 }
+
+
 
 
 //
@@ -258,6 +283,35 @@ void SetCurrentLayout(string layoutname) {
 	SendMessage(hWndComboBox, CB_SETCURSEL, (WPARAM)index, (LPARAM)0);
 	
 }
+
+void setShowConsole(bool checked) {
+	HWND hWndCheckBox = GetDlgItem(ghDlgMain, IDC_CHECKSHOWCONSOLE);
+	if (checked) {
+		SendMessage(hWndCheckBox, BM_SETCHECK, (WPARAM)BST_CHECKED, (LPARAM)0);
+	}
+	else {
+		SendMessage(hWndCheckBox, BM_SETCHECK, (WPARAM)BST_UNCHECKED, (LPARAM)0);
+	}
+	showConsole(checked);
+}
+
+bool getShowConsole() {
+	LRESULT chk = SendDlgItemMessage(ghDlgMain, IDC_CHECKSHOWCONSOLE, BM_GETCHECK, 0, 0);
+	return (chk == BST_CHECKED);
+}
+
+void showConsole(bool state) {
+	int setToState = SW_HIDE;
+	if (state) {
+		setToState = SW_SHOW;
+	}
+	ShowWindow(GetDlgItem(ghDlgMain, IDC_APPMESSAGES), setToState);
+	ShowWindow(GetDlgItem(ghDlgMain, IDC_OPENLOGFILE), setToState);
+	ShowWindow(GetDlgItem(ghDlgMain, IDC_CLEARCONSOLE), setToState);
+}
+
+
+
 
 
 //
@@ -442,6 +496,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	ghWnd = hWnd;
 
+	
 
 
 	// Notification Icon (System Tray)
@@ -503,10 +558,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	
 	// Create Main Window (Dialoge)
 	ghDlgMain = CreateDialog(ghInst, MAKEINTRESOURCE(IDD_MAINWIN), ghWnd, Main);
+	showConsole(false);
 	SendMessage(ghDlgMain, WM_SETICON, ICON_BIG, (LPARAM)LoadIcon(ghInst, MAKEINTRESOURCE(IDI_K70TRAY)));
 	SendMessage(ghDlgMain, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(ghInst, MAKEINTRESOURCE(IDI_K70TRAY)));
-	
-
 	
 
 	int ret = SetTimer(ghDlgMain, ID_TIMER, 30, NULL);
@@ -617,7 +671,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 		default:
-			if (wmId >= SYTEMTRAY_THEMESELECTBEGIN && wmId < SYTEMTRAY_THEMESELECTBEGIN + themeItems.size())
+			size_t myWmIdx = wmId;
+			if (myWmIdx >= SYTEMTRAY_THEMESELECTBEGIN && myWmIdx < (SYTEMTRAY_THEMESELECTBEGIN + themeItems.size()))
 			{
 				int themeId = wmId - SYTEMTRAY_THEMESELECTBEGIN;
 				DebugMsg("Switch Theme by ContextMenu to %i", themeId);
@@ -675,7 +730,9 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 void ApplicationEndCleanup() {
+	
 	Shell_NotifyIcon(NIM_DELETE, &niData);
+	myLogFile.close();
 	PostQuitMessage(0);
 }
 
@@ -701,6 +758,10 @@ INT_PTR CALLBACK ErrorStartup(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
 	}
 	return (INT_PTR)FALSE;
 }
+
+
+
+
 
 //
 // Message handler for MainDLG Window
@@ -738,6 +799,7 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_SHOWWINDOW: 
 	{
+		SetFocus(GetDlgItem(ghDlgMain, IDC_APPMESSAGES)); // reset the focus to avoid change by key or mousewheel
 		RECT Rect;
 		GetWindowRect(ghDlgMain, &Rect);
 
@@ -759,6 +821,7 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_INITDIALOG:
+		
 		// getLastWindowPosition(string pos)
 		DebugMsg("INITDIALOG!");
 		// SendMessage(GetDlgItem(ghDlgMain, IDC_APPMESSAGES), EM_SETLIMITTEXT, (WPARAM)0, (LPARAM)0);
@@ -794,29 +857,21 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 		
 		hdcInst = BeginPaint(hDlg, &ps);
-
-		// Create a memory device compatible with the above DC variable
-
 		hdcBitmap = CreateCompatibleDC(hdcInst);
+		SelectObject(hdcBitmap, mainWindowBackgroundHBitmap);
 
-		// Select the new bitmap
-
-		SelectObject(hdcBitmap, hBitmap);
-
-		GetObject(hBitmap, sizeof(bp), &bp);
-
-		// Get client coordinates for the StretchBlt() function
-
+		GetObject(mainWindowBackgroundHBitmap, sizeof(bp), &bp);
 		GetClientRect(hDlg, &r);
-
-		// stretch bitmap across client area
-
 		BitBlt(hdcInst, 0, 0, bp.bmWidth, bp.bmHeight, hdcBitmap, 0, 0, SRCCOPY);
-
-		// Cleanup
-
 		DeleteDC(hdcBitmap);
+		
+		if (!getShowConsole()) {
+			mainCorsairK70RGBK->UpdateThemeInfo();
+		}
+		
+
 		EndPaint(hDlg, &ps);
+
 		
 	}
 		break;
@@ -839,27 +894,21 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		if (LOWORD(wParam) == IDC_THEMESELECT){
 			if (HIWORD(wParam) == CBN_SELCHANGE)
 			{
-				SetFocus(hDlg); 
+				SetFocus(GetDlgItem(ghDlgMain, IDC_APPMESSAGES)); // reset the focus to avoid change by key or mousewheel
 				int selectedThemeIndex = SendMessage((HWND)lParam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
 				mainCorsairK70RGBK->ChangeTheme(themeItems[selectedThemeIndex]);
 				
 			}
-			else if (HIWORD(wParam) == CBN_SETFOCUS) {
-			
-			}
 		}
 		// Layout Select Change
-		if (LOWORD(wParam) == IDC_LAYOUTSELECT){
+		else if (LOWORD(wParam) == IDC_LAYOUTSELECT){
 			if (HIWORD(wParam) == CBN_SELCHANGE)
 			{
-				SetFocus(hDlg);
+				SetFocus(GetDlgItem(ghDlgMain, IDC_APPMESSAGES)); // reset the focus!
 				int savingLayoutIndex = SendMessage((HWND)lParam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
 				mainCorsairK70RGBK->ChangeLayout(layoutItems[savingLayoutIndex]);
+				
 			}
-			else if (HIWORD(wParam) == CBN_SETFOCUS) {
-	
-			}
-
 		}
 		// About
 		else if (LOWORD(wParam) == IDC_BUTTONABOUT){
@@ -886,9 +935,14 @@ INT_PTR CALLBACK Main(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			int selectedThemeIndex = SendMessage(hwndOutput, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
 			mainCorsairK70RGBK->ChangeTheme(themeItems[selectedThemeIndex]);
 		}
+		// Open Log in Wordpad
 		else if (LOWORD(wParam) == IDC_OPENLOGFILE){
 			ShellExecute(0, 0, L"log.txt", 0, 0, SW_SHOW);
 		}
+		else if (LOWORD(wParam) == IDC_CHECKSHOWCONSOLE){
+			showConsole(getShowConsole());
+		}
+		
 		// Exit of Window (means hide)
 		else if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
@@ -919,13 +973,21 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 //
 void AppStart()
 {
-	RECT rcClient;
-	HWND pArea = GetDlgItem(ghDlgMain, IDC_KEYBOARDPREVIEW);
-	HDC hdc = GetDC(pArea);
 
-	GetClientRect(pArea, &rcClient);
+	RECT rcKeyboardPreview;
+	HWND keyboardPreviewArea = GetDlgItem(ghDlgMain, IDC_KEYBOARDPREVIEW);
+	HDC keyboardPreviewHdc = GetDC(keyboardPreviewArea);
+	GetClientRect(keyboardPreviewArea, &rcKeyboardPreview);
+
+	RECT rcThemeInfo;
+	HWND themeInfoArea = GetDlgItem(ghDlgMain, IDC_THEMEINFO);
+	HDC themeInfoHdc = GetDC(themeInfoArea);
+	GetClientRect(themeInfoArea, &rcThemeInfo);
+
+
 	mainCorsairK70RGBK->AppInit(false);
-	mainCorsairK70RGBK->AppStart(hdc, &rcClient);
+	mainCorsairK70RGBK->AppStart(keyboardPreviewHdc, &rcKeyboardPreview, themeInfoHdc, &rcThemeInfo);
 
-	ReleaseDC(pArea, hdc);
+	ReleaseDC(keyboardPreviewArea, keyboardPreviewHdc);
+	ReleaseDC(themeInfoArea, themeInfoHdc);
 }

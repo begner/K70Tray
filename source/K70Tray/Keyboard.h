@@ -1,6 +1,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include "Globals.h"
 #include "Constants.h"
 #include <stdlib.h>
 #include <string>
@@ -15,13 +16,13 @@ class Keyboard
 {
 
 private:
-	vector<string>		pressedKeys;
+	vector<string> pressedKeys;
 	void RemoveDuplicatedOnPressedKeys();
 public:
 	Keyboard();
 	void KeyDown(unsigned int keycode);
 	void KeyUp(unsigned int keycode);
-	vector<string> Keyboard::getAllPressedKeys();
+	vector<string> getAllPressedKeys();
 	int getCodeByName(string keyname);
 	string getNameByCode(unsigned int keycode);
 	vector <string> GetAllKeyNames();

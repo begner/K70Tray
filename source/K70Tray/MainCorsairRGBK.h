@@ -7,6 +7,8 @@
 #include "Theme.h"
 #include "convert.h"
 #include "KeyboardPreview.h"
+#include "ThemeInfo.h"
+#include "FileSystem.h"
 #include <shlobj.h>		// needed for SHGetFolderPath()
 
 
@@ -21,6 +23,7 @@ private:
 	bool animateKeyBoard = false;
 	void ResetKeyboard();
 	KeyboardPreview * keyboardPreview = NULL;
+	ThemeInfo * themeInfo = NULL;
 	// void PaintPreview();
 public:
 
@@ -28,7 +31,7 @@ public:
 	~MainCorsairRGBK();
 	void KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam);
 	bool AppInit(bool justCheck);
-	void AppStart(HDC winHdc, RECT* prc);
+	void AppStart(HDC keyboardPreviewHdc, RECT* keyboardPreviewRect, HDC themeInfoHdc, RECT* themeInfoRect);
 	void SendLEDState();
 	vector<string> GetXMLFiles(wstring filter);
 	K70XMLConfig * getConfig();
@@ -36,5 +39,6 @@ public:
 	void ChangeLayout(string layoutName);
 	void PaintKeyboardState();
 	void saveConfig();
+	void UpdateThemeInfo();
 };
 

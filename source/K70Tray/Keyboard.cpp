@@ -57,10 +57,12 @@ void Keyboard::RemoveDuplicatedOnPressedKeys() {
 	sort(pressedKeys.begin(), pressedKeys.end());
 	pressedKeys.erase(unique(pressedKeys.begin(), pressedKeys.end()), pressedKeys.end());
 
-	// printf("-------------------\n");
-	// for (vector<unsigned int>::iterator it = pressedKeys.begin(); it != pressedKeys.end(); ++it) {
-		// printf("  - Key Pressed: %i\n", *it);
-	// }
+	/*
+	DebugMsg("-------------------");
+	for (vector<string>::iterator it = pressedKeys.begin(); it != pressedKeys.end(); ++it) {
+		DebugMsg(" - Key Pressed: '%s'", (*it).c_str());
+	}
+	*/
 }
 
 string Keyboard::getNameByCode(unsigned int keycode) {

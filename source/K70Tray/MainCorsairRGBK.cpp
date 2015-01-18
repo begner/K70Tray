@@ -32,46 +32,68 @@ MainCorsairRGBK::~MainCorsairRGBK()
 
 bool MainCorsairRGBK::AppInit(bool justCheck)
 {
-	vector<string> allThemeFiles = GetXMLFiles(wstring(L"Theme.*.xml"));
-	for (vector<string>::iterator it = allThemeFiles.begin(); it < allThemeFiles.end(); it++) {
-		string themeName = (*it);
-		themeName.replace(0, 6, "");
-		themeName.replace(themeName.length() - 4, 4, "");
-		DebugMsg("Theme found: '%s'", themeName.c_str());
-		if (justCheck) {
-			addThemeToDropdown(themeName);
+	FileSystem fs;
+	vector<string> allThemeFiles;
+	vector<string> themeFolders = fs.GetFoldersInPath("Themes", true);
+	for (vector<string>::iterator it = themeFolders.begin(); it < themeFolders.end(); it++) {
+		string themeFolderName = (*it);
+		string themeFileName = "Theme." + themeFolderName + ".xml";
+		DebugMsg("ThemeFolder '%s' found...", themeFolderName.c_str());
+		if (fs.FileExists(fs.getPath() + "//" + themeFolderName + "//"+themeFileName)) {
+			allThemeFiles.push_back(themeFolderName);
+			
 		}
-	}
-	vector<string> allLayoutFiles = GetXMLFiles(wstring(L"Layout.*.xml"));
+		else {
+			DebugMsg("WARNING: Theme in Folder '%s' not found (should be named '%s')", themeFolderName.c_str(), themeFileName.c_str());
+		}
 
+	}
+
+	vector<string> allLayoutFiles = fs.GetFilesInPath("Layouts", true, "Layout.*.xml");
 	for (vector<string>::iterator it = allLayoutFiles.begin(); it < allLayoutFiles.end(); it++) {
 		string layoutName = (*it);
-		layoutName.replace(0, 7, "");
-		layoutName.replace(layoutName.length() - 4, 4, "");
-		DebugMsg("Layout found: '%s'", layoutName.c_str());
-		if (justCheck) {
-			addLayoutToDropdown(layoutName);
-		}
+		str_replace(layoutName, "Layout.", "");
+		str_replace(layoutName, ".xml", "");
+		*it = layoutName;
+
+		DebugMsg("Layoutfile: %s", it->c_str());
 	}
 
+	
 	if (allThemeFiles.size() < 1 && allLayoutFiles.size() < 1) {
 		DebugMsg("Theme.*.xml or Layout.*.xml not found!");
 		return false;
 	}
 
 	currentTheme = new Theme();
+
 	config = new K70XMLConfig(this);
 	if (!config->readConfig()) {
 		DebugMsg("config.xml not found!");
 		return false;
 	}
+	
+	
+	if (!justCheck) {
+		for (vector<string>::iterator it = allThemeFiles.begin(); it < allThemeFiles.end(); it++) {
+			string themeName = (*it);
+			addThemeToDropdown(themeName);
+		}
+
+		for (vector<string>::iterator it = allLayoutFiles.begin(); it < allLayoutFiles.end(); it++) {
+			string layoutName = (*it);
+			addLayoutToDropdown(layoutName);
+		}
+	}
+	
 	return true;
 }
 
-void MainCorsairRGBK::AppStart(HDC winHdc, RECT* prc) {
+void MainCorsairRGBK::AppStart(HDC keyboardPreviewHdc, RECT* keyboardPreviewRect, HDC themeInfoHdc, RECT* themeInfoRect) {
 	ChangeLayout(config->getLayoutName());
 
-	keyboardPreview = new KeyboardPreview(winHdc, prc);
+	keyboardPreview = new KeyboardPreview(keyboardPreviewHdc, keyboardPreviewRect);
+	themeInfo = new ThemeInfo(themeInfoHdc, themeInfoRect);
 
 	ResetKeyboard();
 	SendLEDState();
@@ -109,6 +131,7 @@ void MainCorsairRGBK::AppStart(HDC winHdc, RECT* prc) {
 
 
 void MainCorsairRGBK::PaintKeyboardState() {
+	
 	// DebugMsg("keyboardPreview");
 	if (currentTheme && currentTheme->getName() != string("") && animateKeyBoard) {
 		 keyboardPreview->PaintKeyboardState();
@@ -163,6 +186,7 @@ void MainCorsairRGBK::SendLEDState()
 	// Check for changes since last time we sent the state
 	if (!memcmp(g_PrevLEDState, g_LEDState, sizeof(g_LEDState)))
 		return;
+		
 	memcpy(g_PrevLEDState, g_LEDState, sizeof(g_LEDState));
 
 	unsigned char pkt[65] = { 0 };
@@ -210,18 +234,23 @@ void MainCorsairRGBK::SendLEDState()
 	pkt[3] = 0;
 	pkt[5] = 0xD8;
 	HidD_SetFeature(keyBoardDevice->getHandle(), pkt, 65);
+
 }
 
 void MainCorsairRGBK::KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
 {
+	
 	int realCode = 0;
 
 	if (nCode == HC_ACTION)
 	{
 		KBDLLHOOKSTRUCT* p = (KBDLLHOOKSTRUCT*)lParam;
 
-		// For reactive typing Enter & Alt keys fix
+		
 
+		//  DebugMsg("KeyboardHook x0%x x0%x %i", p->vkCode, p->flags, p->flags & KF_UP);
+
+		// Enter & Alt keys fix
 		if ((p->vkCode == 0xA4 || p->vkCode == 0xA5) && (p->flags == 0x20 || p->flags == 0x21))
 		{
 			wParam = WM_KEYDOWN;
@@ -230,6 +259,19 @@ void MainCorsairRGBK::KeyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
 		{
 			wParam = WM_KEYUP;
 		}
+
+		// strg (hold), alt(hold) strg(relase) <- not detected!
+		if ((p->vkCode == 0xA2) && (p->flags == 0xA0))
+		{
+			wParam = WM_KEYUP;
+		}
+		// Same on right 
+		if ((p->vkCode == 0xA3) && (p->flags == 0xA1))
+		{
+			wParam = WM_KEYUP;
+		}
+
+				
 
 		switch (wParam)
 		{
@@ -330,72 +372,17 @@ void MainCorsairRGBK::ChangeTheme(string themeName) {
 	DebugMsg("Change Theme to '%s'", themeName.c_str());
 	SetCurrentTheme(themeName);
 	config->parseTheme(themeName.c_str());
+	themeInfo->drawInfo();
+
 	DebugMsg("Theme Parsing done!");
 	currentTheme->StartTheme();
 	animateKeyBoard = true;
 }
 
-
-vector<string> MainCorsairRGBK::GetXMLFiles(wstring filter)
-{
-	vector<string> themelist;
-
-	wchar_t* cwd;
-	cwd = _wgetcwd(NULL, 0);
-
-	// MessageBox(NULL, (LPCWSTR)cwd, L"test", MB_OK);
-
-
-	WIN32_FIND_DATA fdFile;
-	HANDLE hFind = NULL;
-
-	wchar_t sPath[2048];
-	wchar_t sFileName[2048];
-	
-	const wchar_t *sDir = cwd;
-
-	//Specify a file mask. *.* = We want everything! 
-	wsprintf(sPath, wstring(wstring(L"%s\\") + filter).c_str(), sDir);
-
-	if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
-	{
-		DebugMsg("Path not found: [%s]\n", sDir);
-		return themelist;
+void MainCorsairRGBK::UpdateThemeInfo() {
+	if (themeInfo) {
+		themeInfo->drawInfo();
 	}
-
-	do
-	{
-		//Find first file will always return "."
-		//    and ".." as the first two directories. 
-		if (wcscmp(fdFile.cFileName, L".") != 0
-			&& wcscmp(fdFile.cFileName, L"..") != 0)
-		{
-			//Build up our file path using the passed in 
-			//  [sDir] and the file/foldername we just found: 
-			wsprintf(sPath, L"%s\\%s", sDir, fdFile.cFileName);
-			wsprintf(sFileName, L"%s", fdFile.cFileName);
-			
-			//Is the entity a File or Folder? 
-			if (fdFile.dwFileAttributes &FILE_ATTRIBUTE_DIRECTORY)
-			{
-				// DebugMsg("Directory: '%S'\n", fdFile.cFileName);
-			//	ListDirectoryContents(sPath); //Recursion, I love it! 
-			}
-			else{
-				wstring wfileName = wstring(sFileName);
-				string sFilename = ws2s(sFileName);
-				themelist.push_back(sFilename);
-				// DebugMsg("File: '%S'\n", fdFile.cFileName);
-			}
-
-		}
-	} while (FindNextFile(hFind, &fdFile)); //Find the next file. 
-
-	FindClose(hFind); //Always, Always, clean things up! 
-
-	return themelist;
+	
 }
-
-
-
 

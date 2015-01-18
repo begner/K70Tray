@@ -22,6 +22,7 @@ class Theme;
 class ThemeMap
 {
 private:
+	bool				isOverlay = false;
 	bool				tickIsRunning = false;
 	Theme*				parentTheme;
 	K70RGB					baseColor;
@@ -62,6 +63,8 @@ public:
 	void Tick();
 	void addBoardAnimation(BoardAnimation ba);
 	bool IsTickRunning();
+	void SetOverlay(bool state);
+	bool GetOverlay();
 };
 
 #endif

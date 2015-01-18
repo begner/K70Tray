@@ -3,11 +3,17 @@
 // are changed infrequently
 //
 
+// #define USE_GDIPULS
+
 #pragma once
 
 #include "targetver.h"
 
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+
+#ifndef USE_GDIPULS
+	#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#endif
+
 // Windows Header Files:
 #include <windows.h>
 
@@ -31,10 +37,19 @@
 
 #include <shellapi.h>
 
+
+#ifdef USE_GDIPULS
+	#include <gdiplus.h>
+#endif
+
 #pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #pragma comment (lib, "Setupapi.lib")
 #pragma comment (lib, "hid.lib")
+#ifdef USE_GDIPULS
+	#pragma comment (lib, "Gdiplus.lib")
+#endif
+
 
 
 

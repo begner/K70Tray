@@ -24,7 +24,7 @@ bool ProcessList::checkProcessChanged() {
 	// DebugMsg("checkProcessChanged to %i", newPid);
 	if (activeProcessId != newPid) {
 		activeProcessId = newPid;
-		DebugMsg("ActiveProcess Changed to %i", activeProcessId);
+		// DebugMsg("ActiveProcess Changed to %i", activeProcessId);
 		return true;
 	}
 	return false;

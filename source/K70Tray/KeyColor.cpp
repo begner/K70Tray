@@ -110,7 +110,7 @@ void KeyColor::setSyncName(string type, string syncName) {
 
 void KeyColor::setBoardAnimationName(string type, string boardAnimationNameName) {
 	if (type == string("onPress")) {
-		DebugMsg("set onPress BoardAnimationName '%s' => '%s'", type.c_str(), boardAnimationNameName.c_str());
+		// DebugMsg("set onPress BoardAnimationName '%s' => '%s'", type.c_str(), boardAnimationNameName.c_str());
 		onPressBoardAnimationName = boardAnimationNameName;
 	}
 	if (type == string("onRelease")) {

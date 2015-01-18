@@ -12,6 +12,9 @@ The sources should compile on Microsoft Visual Studio Comunity Editon 2013 (whic
 
 If you just want to use it - just download the ZIP file named "K70Tray_release_XXX.rar" - unpack and start.
 
+![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04.PNG)
+
+
 What it is
 ==========
 
@@ -19,12 +22,6 @@ A Windows System Tray Application which allows you to define RGB Keyboard Layout
 This software is as-it-is - and far from bugfree. It is not testet - but you've got a high chance to get it work.
 Please report errors to me.
 
-<div style="width:100px>
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04.PNG)
-</div>
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_2.PNG)
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_3.PNG)
-![Screenshot of K70Tray](https://raw.githubusercontent.com/begner/K70Tray/master/screenshots/K70Tray1.04_4.PNG)
 
 
 Issues
@@ -205,10 +202,10 @@ Or you can use a KeyGroup (look at Theme.Rainbow.xml)
 
 More features i need to document:
 ==========================
-- syncName & SyncGroups
-- sharedAnimations and sharedKeyGroups
-- onRelease join="add" / join="overwrite"
-- Overlay Maps
-- boardAnimations
+- [ ] syncName & SyncGroups
+- [ ] sharedAnimations and sharedKeyGroups
+- [ ] onRelease join="add" / join="overwrite"
+- [ ] Overlay Maps
+- [ ] boardAnimations
 
 Have Fun!

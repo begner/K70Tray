@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+    <Layout>K70.German</Layout>
+    <Theme>Rainbow</Theme>
+    <UpdateInterval>30</UpdateInterval>
+    <openMainDlg>1</openMainDlg>
+    <WindowPositionTop>138</WindowPositionTop>
+    <WindowPositionLeft>1734</WindowPositionLeft>
+    <ShowConsole>0</ShowConsole>
+</Config>
